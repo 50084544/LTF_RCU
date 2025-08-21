@@ -1,0 +1,235 @@
+[
+  {
+    "id": "NBFCCode",
+    "label": "NBFC Code",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter NBFC Code"
+  },
+  {
+    "id": "MCCode",
+    "label": "MC code",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter MC code"
+  },
+  {
+    "id": "MCName",
+    "label": "MC Name",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter MC Name"
+  },
+  {
+    "id": "Territory",
+    "label": "Territory",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter Territory"
+  },
+  {
+    "id": "District",
+    "label": "District",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter District"
+  },
+  {
+    "id": "State",
+    "label": "State",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter State"
+  },
+  {
+    "id": "PINCode",
+    "label": "PIN code where branch is located",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter PIN code"
+  },
+  {
+    "id": "TypeOfBranch",
+    "label": "Type of branch",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Urban",
+      "Rural",
+      "Semi-urban",
+      "Metropolitan",
+      "NA"
+    ]
+  },
+  {
+    "id": "RiskClassification",
+    "label": "Risk Classification",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "High",
+      "Medium",
+      "Low"
+    ],
+    "hint": "To be discussed whether risk classification is of the branch"
+  },
+  {
+    "id": "NoOfArmedGuards",
+    "label": "No. of Armed Guards",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of armed guards"
+  },
+  {
+    "id": "TypeOfCase",
+    "label": "Type of Case",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Dacoity",
+      "Burgulary",
+      "Theft",
+      "Robbery"
+    ]
+  },
+  {
+    "id": "PlaceOfOccurrence",
+    "label": "Place of Occurrence",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "In Branch",
+      "Outside Branch",
+      "In transit"
+    ]
+  },
+  {
+    "id": "DateTimeOfOccurrence",
+    "label": "Date and time of occurrence",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter date and time of occurrence"
+  },
+  {
+    "id": "AmountInvolved",
+    "label": "Amount Involved (Rs. in lakh)",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter amount involved (in lakh)"
+  },
+  {
+    "id": "AmountRecovered",
+    "label": "Amount Recovered (Rs. in lakh)",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter amount recovered (in lakh)"
+  },
+  {
+    "id": "InsuranceClaimSettled",
+    "label": "Insurance Claim Settled (Rs. in lakh)",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter insurance claim settled (in lakh)"
+  },
+  {
+    "id": "StaffArrested",
+    "label": "Staff Arrested",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of staff arrested"
+  },
+  {
+    "id": "RobbersArrested",
+    "label": "Robbers Arrested",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of robbers arrested"
+  },
+  {
+    "id": "StaffKilled",
+    "label": "Staff Killed",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of staff killed"
+  },
+  {
+    "id": "RobbersKilled",
+    "label": "Robbers Killed",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of robbers killed"
+  },
+  {
+    "id": "OthersKilled",
+    "label": "Others Killed",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of others killed"
+  },
+  {
+    "id": "StaffInjured",
+    "label": "Staff Injured",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of staff injured"
+  },
+  {
+    "id": "OthersInjured",
+    "label": "Others Injured",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of others injured"
+  },
+  {
+    "id": "NoOfStaffConvicted",
+    "label": "No of Staff Convicted",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of staff convicted"
+  },
+  {
+    "id": "NoOfRobbersConvicted",
+    "label": "No of Robbers Convicted",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter number of robbers convicted"
+  },
+  {
+    "id": "CompensationPaidToStaff",
+    "label": "Compensation Paid to Staff (Actual in Rs.)",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter compensation paid to staff"
+  },
+  {
+    "id": "CompensationPaidToOthers",
+    "label": "Compensation Paid to Others (Actual in Rs.)",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter compensation paid to others"
+  },
+  {
+    "id": "ActionTaken",
+    "label": "Action Taken",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Suit Filed",
+      "Not suit filed"
+    ]
+  },
+  {
+    "id": "CrimeNoPoliceStation",
+    "label": "Crime No. and Police Station Name",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter Crime No. and Police Station Name"
+  },
+  {
+    "id": "ModusOperandi",
+    "label": "Modus Operandi",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Describe modus operandi"
+  }
+]

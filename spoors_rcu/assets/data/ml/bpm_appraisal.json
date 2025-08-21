@@ -1,0 +1,158 @@
+[
+  {
+    "id": "GroupID",
+    "label": "Group ID",
+    "fieldType": "text",
+    "isRequired": true,
+    "hint": "Enter Group ID"
+  },
+  {
+    "id": "MCCode",
+    "label": "MC Code",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "hint": "Select MC Code"
+  },
+  {
+    "id": "MCName",
+    "label": "MC Name",
+    "fieldType": "autoFilled",
+    "isRequired": false,
+    "hint": "Auto-populated MC Name"
+  },
+  {
+    "id": "State",
+    "label": "State",
+    "fieldType": "autoFilled",
+    "isRequired": false,
+    "hint": "Auto-populated State"
+  },
+  {
+    "id": "Territory",
+    "label": "Territory",
+    "fieldType": "autoFilled",
+    "isRequired": false,
+    "hint": "Auto-populated Territory"
+  },
+  {
+    "id": "DateOfVisit",
+    "label": "Date of Visit",
+    "fieldType": "date",
+    "isRequired": true,
+    "hint": "Select date of visit"
+  },
+  {
+    "id": "AllBorrowersPresent",
+    "label": "Is all Borrowers in a Group Present in Meeting",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "PDT1TrainingConducted",
+    "label": "Is PDT 1 Training was conducted by FLO",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BPMExplainedPolicyROI",
+    "label": "Did BPM explained LTFS policy & ROI",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BPMVisitedAllResidence",
+    "label": "Did BPM visited all residence of borrowers.",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "IfNotVisitedResidence_Lan",
+    "label": "If no, Mention Lan#",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter Lan# if BPM did not visit all residences"
+  },
+  {
+    "id": "BPMCheckedIncomeSource",
+    "label": "Did BPM checked borrower Income source & Nos of earning members",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BPMVerifiedAllDocuments",
+    "label": "Did BPM verified all documents of borrowers",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "IfNotVerifiedDocuments_Lan",
+    "label": "If no, Mention Lan#",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter Lan# if BPM did not verify all documents"
+  },
+  {
+    "id": "ObservationsInKYC",
+    "label": "Any Observations in KYC documents",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BPMVerifiedBankPassbook",
+    "label": "Did BPM verified Borrowers Bank Passbook",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "IfNotVerifiedPassbook_Lan",
+    "label": "If no, Mention Lan#",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter Lan# if BPM did not verify bank passbook"
+  },
+  {
+    "id": "ObservationsInBankPassbook",
+    "label": "Any Observations in Bank Passbook",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "IdentifiedInGroup",
+    "label": "Did we identified any of following in Group",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Bank Passbook Related",
+      "Customer not interested to take loan",
+      "Income Issue",
+      "KYC Related",
+      "No Issue",
+      "Policy & Process Deviation",
+      "Wrong Village Mapping",
+      "Deviation in Customer selection Criteria"
+    ]
+  },
+  {
+    "id": "Remarks",
+    "label": "Remarks",
+    "fieldType": "text",
+    "isRequired": true,
+    "hint": "Enter remarks"
+  },
+  {
+    "id": "Status",
+    "label": "Status",
+    "fieldType": "text",
+    "isRequired": true,
+    "hint": "Enter status"
+  }
+]

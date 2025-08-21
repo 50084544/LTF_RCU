@@ -1,0 +1,2 @@
+This is a placeholder for the L&T Finance logo.
+In a real application, you would replace this with an actual image file like logo.png.

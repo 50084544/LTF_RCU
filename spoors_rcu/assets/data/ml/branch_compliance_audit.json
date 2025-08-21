@@ -1,0 +1,351 @@
+[
+  {
+    "category": "Employees related",
+    "questions": [
+      {
+        "id": "Emp_Q1",
+        "question": "Is all Staff (BM or BPM or FLO or FCO or RLO) Background verification form, appointment letter, KYC, Driving License, Two wheeler Insurance certificate filled in the MC and is it valid?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Emp_Q2",
+        "question": "Is the staff's portfolio has not been swapped who is having the vintage of more than 18 months?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "No": 2, "Yes": 0 }
+      },
+      {
+        "id": "Emp_Q3",
+        "question": "Is local employees working at this MC?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "No": 3, "Yes": 0 }
+      },
+      {
+        "id": "Emp_Q4",
+        "question": "All employees present in MC are as per HR records?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "File Maintenance",
+    "questions": [
+      {
+        "id": "File_Q1",
+        "question": "Documents of every CLI initiated cases are filed in MC",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "File_Q2",
+        "question": "Deposit Slip File updated with all deposit slips with date-wise sequence",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "Keys Maintenance",
+    "questions": [
+      {
+        "id": "Keys_Q1",
+        "question": "Does the G-1 & G-2 Keys handled by BPM or BM resp. or Authorized Person?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Keys_Q2",
+        "question": "Office Premises Keys- One set Key available with both persons (BM or BPM) or Authorized Person",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "Notice Board",
+    "questions": [
+      {
+        "id": "Notice_Q1",
+        "question": "Board updated with latest Statutory Declarations",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "HOTO Process",
+    "questions": [
+      {
+        "id": "HOTO_Q1",
+        "question": "Are handover docs(hard or soft copy) maintained for outgoing employees (exit, transferred & Absconded)?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "Previous Audit Compliance",
+    "questions": [
+      {
+        "id": "Compliance_Q1",
+        "question": "Is the Previous Audit query has been resolved at MC?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "Petty Cash",
+    "questions": [
+      {
+        "id": "Petty_Q1",
+        "question": "Petty Cash claim bills file is available and maintained at MC",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "Register",
+    "questions": [
+      {
+        "id": "Reg_Q1",
+        "question": "Is Key handover takeover register available and updated?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Reg_Q2",
+        "question": "Daily attendance register is being updated by all employees?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "Yes": 1, "No": 0 }
+      },
+      {
+        "id": "Reg_Q3",
+        "question": "Daily entry being made in cash-in and Cash-out register",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Reg_Q4",
+        "question": "Complaint Register available and maintained in MC",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "Yes": 1, "No": 0 }
+      },
+      {
+        "id": "Reg_Q5",
+        "question": "CLI Register updated with all death cases reported from MC",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      }
+    ]
+  },
+  {
+    "category": "Process related",
+    "questions": [
+      {
+        "id": "Proc_Q1",
+        "question": "Todays opening cash balance as per register matches with the MERC Screen",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Proc_Q2",
+        "question": "Todays opening cash balance as per register matches with the physical cash in vault",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Proc_Q3",
+        "question": "Digital Cash HO receipts-MERC data matching with cash in mentioned in cash in out register",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Proc_Q4",
+        "question": "Has the BPM personally visited and verified all death claims as per the process?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Proc_Q5",
+        "question": "Any unauthorised cash available at MC.",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Proc_Q6",
+        "question": "All MC staff have active email ID and cash deposit at MC acko. received in FLOs inbox?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "Yes": 1, "No": 0 }
+      },
+      {
+        "id": "Proc_Q7",
+        "question": "All complaints are addressed and closed",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      },
+      {
+        "id": "Proc_Q8",
+        "question": "Is Customers KYC lying in the MC Premises?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "No": 1, "Yes": 0 }
+      },
+      {
+        "id": "Proc_Q9",
+        "question": "Is Customers passbooks lying in the MC Premise?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "No": 1, "Yes": 0 }
+      },
+      {
+        "id": "Proc_Q10",
+        "question": "Is any problem observed in the grouting of Vault in MC Premise.",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "No": 3, "Yes": 0 }
+      },
+      {
+        "id": "Proc_Q11",
+        "question": "Is Disbursement document (Customer Consent Form) available in the branch for the audited period?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      },
+      {
+        "id": "Proc_Q12",
+        "question": "Is there any discrepancy identified in Customer Consent Form (Disb Document)?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "No": 3, "Yes": 0 }
+      },
+      {
+        "id": "Proc_Q13",
+        "question": "Is an updated negative village list available in the branch (soft copy in the system & Physical File)?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      },
+      {
+        "id": "Proc_Q14",
+        "question": "Is updated Ringleader Database available in the branch (soft copy in the system & Physical File)?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      },
+      {
+        "id": "Proc_Q15",
+        "question": "Are Biometric device available with all FLOs?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": { "Yes": 3, "No": 0 }
+      },
+      {
+        "id": "Proc_Q16",
+        "question": "Valid Rent agreement available in MC?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "Yes": 1, "No": 0 }
+      },
+      {
+        "id": "Proc_Q17",
+        "question": "Is RPM Checklist updated at the MC?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "Yes": 1, "No": 0 }
+      },
+      {
+        "id": "Proc_Q18",
+        "question": "Post verification of Physical cash, Cash in-out register signed by TM or not during visit.",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      },
+      {
+        "id": "Proc_Q19",
+        "question": "Fire extinguisher available at MC.",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": { "Yes": 1, "No": 0 }
+      },
+      {
+        "id": "Proc_Q20",
+        "question": "LTF sign board displayed outside the MC and good condition?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      },
+      {
+        "id": "Proc_Q21",
+        "question": "Are there CCTV cameras installed at the branch premises and are they all in working condition with desired storage?",
+        "fieldType": "dropdown",
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": { "Yes": 2, "No": 0 }
+      }
+    ]
+  }
+]

@@ -1,0 +1,63 @@
+{
+    "activityList": [{
+      "title": "Live Disbursement",
+      "icon": "Icons.money",
+      "route": "live_disbursement",
+      "isNew": true
+    },
+    {
+      "title": "Collection Audit",
+      "icon": "Icons.account_balance_wallet",
+      "route": "collection_audit",
+      "isNew": true
+    },
+    {
+      "title": "Post Disbursement Audit",
+      "icon": "Icons.assignment_turned_in",
+      "route": "post_disbursement_audit",
+      "isNew": true
+    },
+    {
+      "title": "Special Audit",
+      "icon": "Icons.star",
+      "route": "special_audit",
+      "isNew": true
+    },
+    {
+      "title": "CRM Audit",
+      "icon": "Icons.people",
+      "route": "crm_audit",
+      "isNew": false
+    },
+    {
+      "title": "Branch Compliance Audit",
+      "icon": "Icons.business",
+      "route": "branch_compliance_audit",
+      "isNew": false
+    },
+    {
+      "title": "Cross Audit",
+      "icon": "Icons.swap_horiz",
+      "route": "cross_audit",
+      "isNew": false
+    },
+    {
+      "title": "FMR 4 theft & robbery",
+      "icon": "Icons.security",
+      "route": "fmr_theft_robbery",
+      "isNew": false
+    },
+    {
+      "title": "BPM Appraisal",
+      "icon": "Icons.assessment",
+      "route": "bpm_appraisal",
+      "isNew": false
+    },
+    {
+      "title": "PDAV",
+      "icon": "Icons.verified_user",
+      "route": "pdav",
+      "isNew": false
+    }
+  ]
+  }

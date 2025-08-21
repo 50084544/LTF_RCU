@@ -1,0 +1,8 @@
+// Helper function to safely request a rebuild  
+void _requestRebuild(BuildContext context, GlobalKey<FormState> formKey) {  
+  if (context is StatefulElement) {  
+    context.markNeedsBuild();  
+  } else if (formKey.currentContext != null) {  
+    (formKey.currentContext as Element).markNeedsBuild();  
+  }  
+} 

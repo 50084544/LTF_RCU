@@ -1,0 +1,910 @@
+[
+  {
+    "category": "Register Maintenance",
+    "questions": [
+      {
+        "id": "RM_Q1",
+        "question": "Whether Cash In Cash Out (CICO) register is available at the branch?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "RPM"
+      },
+      {
+        "id": "RM_Q2",
+        "question": "Was the register properly updated with all the particulars?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "RM_Q3",
+        "question": "Whether the complaint register is available and updated?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RM_Q4",
+        "question": "Whether the complaints are resolved within 15 days?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RM_Q5",
+        "question": "Whether the attendance register is available and updated",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0}
+      },
+      {
+        "id": "RM_Q6",
+        "question": "Whether the attendance are regularised by the seniors are in line with the attendance and key movement register",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      }
+    ]
+  },
+  {
+    "category": "Cash Management",
+    "questions": [
+      {
+        "id": "CM_Q1",
+        "question": "Any discrepancies observed during physical verification of cash",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3},
+        "owner": "RPM"
+      },
+      {
+        "id": "CM_Q2",
+        "question": "Whether any cash was observed in drawer/ vault which remains unaccounted in system/register.",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "CM_Q3",
+        "question": "Any counterfeit/fake currency found in the branch?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "CM_Q4",
+        "question": "Whether proper approvals were given for keeping overnight cash in hand at the branch? (Check last one month data from date of visit)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      }
+    ]
+  },
+  {
+    "category": "File Management",
+    "questions": [
+      {
+        "id": "FM_Q1",
+        "question": "Is Deposit Slip Maintenance File available at MC and is it updated?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0},
+        "owner": "RPM"
+      },
+      {
+        "id": "FM_Q2",
+        "question": "Are all the FLO's having an active Email ID and handover receipts are issued online?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0}
+      },
+      {
+        "id": "FM_Q3",
+        "question": "Are the cash handover receipt issued with the correct particulars?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0}
+      },
+      {
+        "id": "FM_Q4",
+        "question": "Details of the cash handover receipt matches with the details mentioned in the CICO register",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0}
+      },
+      {
+        "id": "FM_Q5",
+        "question": "Is the Foreclosure e-receipt File available at MC and is it complete in nature?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0}
+      },
+      {
+        "id": "FM_Q6",
+        "question": "Is the Negative Village list available at MC and is it updated?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "FM_Q7",
+        "question": "Is the Middleman / Ringleader list available at MC and is it updated?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0},
+        "owner": "TM"
+      }
+    ]
+  },
+  {
+    "category": "Keys Management",
+    "questions": [
+      {
+        "id": "KM_Q1",
+        "question": "Are all the premises keys updated in the key movement register?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "RPM"
+      },
+      {
+        "id": "KM_Q2",
+        "question": "Are the premises keys held by authorised person other than BM/BPM?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "KM_Q3",
+        "question": "Whether the vault keys are held by an authorized custodian and the same is correctly updated in the register?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "KM_Q4",
+        "question": "In case where the keys of the vault are lost, whether the same has been intimated to RM/FCM?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "KM_Q5",
+        "question": "Whether Key Movement Register is available and updated? (Vault)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      }
+    ]
+  },
+  {
+    "category": "Cash Vault Grouting Status",
+    "questions": [
+      {
+        "id": "CVG_Q1",
+        "question": "Does the grouting satisfy the criteria (Cement grouting to be done from all sides)?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0},
+        "owner": "RPM"
+      }
+    ]
+  },
+  {
+    "category": "CLI Claim",
+    "questions": [
+      {
+        "id": "CLI_Q1",
+        "question": "Is CLI File available at MC and is it updated?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "RPM"
+      },
+      {
+        "id": "CLI_Q2",
+        "question": "Is CLI Register available in the branch and updated as per the excel shared by the CLI team for death cases?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "CLI_Q3",
+        "question": "Are all documents in the original form available for the cases entered in the CLI register?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "CLI_Q4",
+        "question": "Whether the CLI documents kept in the branch are genuine?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "CLI_Q5",
+        "question": "Whether BPM visited all CLI cases which have been raised in the system, by the FLO (10 days prior)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "CLI_Q6",
+        "question": "Whether the CLI verification form is present and completley filled by BPM?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0}
+      },
+      {
+        "id": "CLI_Q7",
+        "question": "Does the MC have any discrepancy in hospi-cash claims?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 0, "No": 1}
+      }
+    ]
+  },
+  {
+    "category": "Petty Cash Expenses",
+    "questions": [
+      {
+        "id": "PCE_Q1",
+        "question": "Is there any discrepancy identified in petty cash bills claimed?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3},
+        "owner": "TM"
+      }
+    ]
+  },
+  {
+    "category": "TM Visit",
+    "questions": [
+      {
+        "id": "TMV_Q1",
+        "question": "Has the TM visited the MC in the current last month?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "TMV_Q2",
+        "question": "Did the TM verify cash?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      }
+    ]
+  },
+  {
+    "category": "Handover Documents maintenance",
+    "questions": [
+      {
+        "id": "HDM_Q1",
+        "question": "Is the branch maintaining HOTO of the employees who have resigned, transferred?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "HDM_Q2",
+        "question": "Is there any discrepancy identified in handover of assets viz. biometric details, employee ID and handover docs?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "HDM_Q3",
+        "question": "Is the portfolio mapping of exit staff correctly done to the new joinee in the MERC collections dashboard?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "HDM_Q4",
+        "question": "Is there any discrepancy identified in field in handover process adherence?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      }
+    ]
+  },
+  {
+    "category": "Collection Audit",
+    "questions": [
+      {
+        "id": "CA_Q1",
+        "question": "Is the portfolio mapping of employees done correctly, in MERC as per actual allocation in the field?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "CA_Q2",
+        "question": "Is there any discrepancy identified through sample audit of FLO/FCO Cases?(Minimum Sample 10 cases- Compulsory)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "CA_Q3",
+        "question": "Is there any case of Receipt Reissued on other day after Rejection identified(With same case details) in the last 3 months (between last and current audit)?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium"
+      },
+      {
+        "id": "CA_Q4",
+        "question": "Is there any case of receipt reissued with lower amount on same day after rejection identified in the last 3 months (between last and current audit)?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium"
+      },
+      {
+        "id": "CA_Q5",
+        "question": "Is there any discrepancy identified during surprise physical cash verification in FLO-FCO Bag?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "CA_Q6",
+        "question": "Is there any discrepancy identified in Delay Deposition, during CRM audit?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3}
+      },
+      {
+        "id": "CA_Q7",
+        "question": "Whether all customers were carrying individual Loan passbook ?( Sample 15 groups compulsory visit)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "CA_Q8",
+        "question": "Is receipts issued to every customer during the collection cycle?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "CA_Q9",
+        "question": "Were loan passbook properly updated (DateSignature) of previous collection meetings/Live meetings?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "CA_Q10",
+        "question": "Is there any discrepancy identified by the CRM for FTOD Cases? i) KYC tampered ii) Age tampering for availing loans etc",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "CA_Q11",
+        "question": "Whether there are any instances of EMI Pocketed by FLO/FCO/BPM/BM(current sample and other audits investigation observations)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "CA_Q12",
+        "question": "Whether any EMI receipts not issued to the borrowers found in the bag of the FLO during the surprise check?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 3}
+      },
+      {
+        "id": "CA_Q13",
+        "question": "Whether any EMI collection is split by the employee's on the date of collection to multiple borrowers?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "CA_Q14",
+        "question": "Whether all the particulars have been mentioned in the loan passbook as defined by the regulators",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "CA_Q15",
+        "question": "Whether any EMI collected in personal wallets/accounts by the MC staff?(check wallets of FLO/BOM/BM)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3}
+      }
+    ]
+  },
+  {
+    "category": "Disbursement Audit",
+    "questions": [
+      {
+        "id": "DA_Q1",
+        "question": "Had the customers been informed in advance about their loan disbursement date?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 1, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "DA_Q2",
+        "question": "Were the customers aware of their Loan or EMI or Interest or  CLI or LPF amount?(Sample 15 groups of live disbursement)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "DA_Q3",
+        "question": "Was appraisal conducted for all the groups?(Sample Visit 10 groups)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "RPM"
+      },
+      {
+        "id": "DA_Q4",
+        "question": "Were all the group members present during loan disbursement?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "DA_Q5",
+        "question": "Is there any discrepancy identified - Commission Extra charges",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3}
+      },
+      {
+        "id": "DA_Q6",
+        "question": "Is there any discrepancy identified - Group Formation Norms, Outside Age Limit, BorrowerCo-Borrower relationship mismatch, etc?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3}
+      },
+      {
+        "id": "DA_Q7",
+        "question": "Is there any discrepancy identified - Outside Geo Limit, Negative Village, Wrong village mapping",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3}
+      },
+      {
+        "id": "DA_Q8",
+        "question": "Is there any loan disbursed to 3rd party account (Other than customer co-borrower)?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 0, "No": 3}
+      },
+      {
+        "id": "DA_Q9",
+        "question": "Has the BOM / BM verified KYC documents physically during appraisal / disbursement? (Online check with M - aadhaar)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "High",
+        "score": {"Yes": 3, "No": 0}
+      },
+      {
+        "id": "DA_Q10",
+        "question": "Is PDD/Customer Consent Form available at the branch for Previous month or not",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "DA_Q11",
+        "question": "Has the BM issued loan passbook to customers contains are these as per process - Hologram, Customer photo, and Signature",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "TM"
+      },
+      {
+        "id": "DA_Q12",
+        "question": "Is the customer & co-borrower signatures are taken on all Customer Consent Forms",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "DA_Q13",
+        "question": "Is there any discrepancy identifed for the Income assessment done by the BOM",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 0, "No": 2}
+      },
+      {
+        "id": "DA_Q14",
+        "question": "Variation in the income captured found more than 50 percentage (income entered by FLO and income informed by customers)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium"
+      }
+    ]
+  },
+  {
+    "category": "Regulatory disclosures",
+    "questions": [
+      {
+        "id": "RD_Q1",
+        "question": "NBFC cerificate displayed ??",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0},
+        "owner": "RPM"
+      },
+      {
+        "id": "RD_Q2",
+        "question": "Certificate of incorporation is displayed ??",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q3",
+        "question": "Abstract of Shops & Establishment Act with state rules displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q4",
+        "question": "Abstract of Payment of Gratuity Act with state rules displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q5",
+        "question": "Abstract of Payment of Wages Act with state rules displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q6",
+        "question": "Abstract of Maternity Benefit Act with state rules displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q7",
+        "question": "Display for Name of Person Receiving notice under o The Payment of Gratuity Act o The Payment of Wages Act o Shop and Establishment license o  Trade license (If Applicable) o Child Labour ( Prohibition & Regulation) displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q8",
+        "question": "Contract labour act displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q9",
+        "question": "Sexual Harassment Prevention & Redressal Policy displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q10",
+        "question": "Trade license (Validity to be checked) displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q11",
+        "question": "Shops & Establishment Act Certificate/License ( Validity to be checked) displayed ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q12",
+        "question": "Vigil Mechansim poster",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q13",
+        "question": "Note on  Customer Grievance Redressal Mechanism & Contact Information of ML & RBI DNBS to Register Grievance displyed or not ( Display should be in english, hindi and vernacular laungauges) and customer awareness IRCP ?",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q14",
+        "question": "Display of Max, Min and average interest rate for different products.",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "RD_Q15",
+        "question": "Display of Fair Practice Code (FPC) in english and vernacular languagee",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      }
+    ]
+  },
+  {
+    "category": "Staff Related",
+    "questions": [
+      {
+        "id": "SR_Q1",
+        "question": "Has the MC violated the rotation policy",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 0, "No": 1},
+        "owner": "TM"
+      },
+      {
+        "id": "SR_Q2",
+        "question": "Whether FLO has been working in the native village",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 0, "No": 1}
+      },
+      {
+        "id": "SR_Q3",
+        "question": "Are the FLO/BM/BPM staying together",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 0, "No": 1}
+      },
+      {
+        "id": "SR_Q4",
+        "question": "Are any employees of the branch related to each other",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 0, "No": 1}
+      },
+      {
+        "id": "SR_Q5",
+        "question": "Is BM or BPM position vacant in MC? More than 10 days",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Low",
+        "score": {"Yes": 0, "No": 1}
+      }
+    ]
+  },
+  {
+    "category": "ATR",
+    "questions": [
+      {
+        "id": "ATR_Q1",
+        "question": "Whether all the observations raised by the CRM/Risk manager in the previos reports have been closed",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"],
+        "risk": "Medium",
+        "score": {"Yes": 2, "No": 0}
+      },
+      {
+        "id": "ATR_Q2",
+        "question": "If 'N' kindly specify the reason",
+        "fieldType": "text",
+        "isRequired": false
+      }
+    ]
+  },
+  {
+    "category": "Declaration by",
+    "questions": [
+      {
+        "id": "DEC_Q1",
+        "question": "I have checked Risk Manager's previous month reports",
+        "fieldType": "text",
+        "isRequired": false
+      },
+      {
+        "id": "DEC_Q2",
+        "question": "I have cross-verified all observations raised by Risk Manager and rectification made on the same",
+        "fieldType": "text",
+        "isRequired": false
+      }
+    ]
+  },
+  {
+    "category": "Others",
+    "questions": [
+      {
+        "id": "OTH_Q1",
+        "question": "Observation 1",
+        "fieldType": "text",
+        "isRequired": false
+      },
+      {
+        "id": "OTH_Q2",
+        "question": "Observation 2",
+        "fieldType": "text",
+        "isRequired": false
+      }
+    ]
+  }
+]

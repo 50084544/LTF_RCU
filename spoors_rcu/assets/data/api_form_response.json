@@ -1,0 +1,45 @@
+{
+  "requestId": "RQ2025070342891",
+  "formId": "loan_application_form",
+  "formName": "Personal Loan Application",
+  "timestamp": "2025-07-03T14:30:00Z",
+  "status": "active",
+  "sections": [
+    {
+      "id": "personal_info",
+      "title": "Personal Information",
+      "description": "Please provide your personal details",
+      "fields": ["customer_name", "marital_status", "phone", "email"]
+    },
+    {
+      "id": "loan_details",
+      "title": "Loan Requirements",
+      "description": "Details about your loan requirement",
+      "fields": ["loan_purpose", "loan_amount", "tenure"]
+    },
+    {
+      "id": "financial_info",
+      "title": "Financial Information",
+      "description": "Your income and financial details",
+      "fields": ["employment_type", "income_source", "monthly_income", "existing_emi"]
+    },
+    {
+      "id": "documents",
+      "title": "Required Documents",
+      "description": "Please upload the following documents",
+      "fields": ["id_proof", "address_proof", "additional_documents"]
+    },
+    {
+      "id": "confirmation",
+      "title": "Confirmation",
+      "description": "Please confirm your application",
+      "fields": ["customer_location", "terms_consent", "signature"]
+    }
+  ],
+  "metadata": {
+    "applicationId": "LA78529164",
+    "branch": "Mumbai Central",
+    "officer": "Rajesh Sharma",
+    "version": "2.1"
+  }
+}

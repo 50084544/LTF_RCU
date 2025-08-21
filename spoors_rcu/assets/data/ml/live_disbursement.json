@@ -1,0 +1,480 @@
+{
+  "formFields": [
+    {
+      "id": "branch_name",
+      "question": "Branch Name",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Auto filled branch name",
+      "helpText": "Branch name",
+      "validationRules": {
+        "minLength": 3,
+        "maxLength": 50,
+        "pattern": "^[a-zA-Z ]*$"
+      },
+      "appearance": {
+        "backgroundColor": "#F0F0F0",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "branch_code",
+      "question": "Branch Code / MC Code",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Enter branch or MC code",
+      "validationRules": {
+        "minLength": 2,
+        "maxLength": 12,
+        "pattern": "^[a-zA-Z0-9 .-]*$"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "state",
+      "question": "State",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Auto filled state",
+      "appearance": {
+        "backgroundColor": "#F0F0F0",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "territory",
+      "question": "Territory",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Auto filled territory",
+      "appearance": {
+        "backgroundColor": "#F0F0F0",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "bm_psid",
+      "question": "BM PS id",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Enter BM PS ID",
+      "validationRules": {
+        "minLength": 3,
+        "maxLength": 20,
+        "pattern": "^[a-zA-Z0-9]*$"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_member_ps_code",
+      "question": "PS code of RCU Member",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Enter PS code of RCU Member",
+      "validationRules": {
+        "minLength": 3,
+        "maxLength": 20,
+        "pattern": "^[a-zA-Z0-9]*$"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "group_id",
+      "question": "Group ID",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Enter Group ID",
+      "validationRules": {
+        "minLength": 2,
+        "maxLength": 20,
+        "pattern": "^[a-zA-Z0-9-]*$"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "disbursal_status",
+      "question": "Disbursal Status",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Disbursed",
+        "Not Disbursed"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "if_not_disbursed_reason",
+      "question": "If not disbursed",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Application done but not came for disbursement",
+        "KYC tempered",
+        "Blood relation",
+        "Address not matched as per KYC",
+        "Co-applicant and applicant not present at the time of DB",
+        "Non co-applicant present at the time DB",
+        "Co-applicant not present at the time of DB",
+        "Applicant joined account with non co-applicant",
+        "Others"
+      ],
+      "conditional": {
+        "dependsOn": "disbursal_status",
+        "showIfValue": "Not Disbursed"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "if_not_disbursed_others",
+      "question": "If others then (This tab will open if user selects Not disbursed)",
+      "fieldType": "text",
+      "isRequired": false,
+      "hint": "Specify other reason",
+      "conditional": {
+        "dependsOn": "if_not_disbursed_reason",
+        "showIfValue": "Others"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "disable_questionnaire_if_not_disbursed",
+      "question": "If not disbursed, other all questionnaire will be disabled",
+      "fieldType": "info",
+      "isRequired": false,
+      "conditional": {
+        "dependsOn": "disbursal_status",
+        "showIfValue": "Not Disbursed"
+      },
+      "appearance": {
+        "backgroundColor": "#FFF3CD",
+        "textColor": "#856404"
+      }
+    },
+    {
+      "id": "num_members_in_group",
+      "question": "No. of Members in Group",
+      "fieldType": "number",
+      "isRequired": true,
+      "hint": "Enter number of group members",
+      "validationRules": {
+        "min": 1,
+        "max": 99
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "is_village_mapped_in_merc",
+      "question": "Is Village Name mapped in MERC",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rlmm_involvement",
+      "question": "RL/MM involvement",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "all_borrower_present",
+      "question": "Is all Borrower present for Disbursment",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "all_co_borrower_present",
+      "question": "Is all Co-Borrower present for Disbursment",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "borrowers_carried_original_kyc",
+      "question": "Borrowers carried their Original KYC & Bankpass book",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "co_borrowers_carried_original_kyc",
+      "question": "Co-Borrowers carried their Original KYC",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "consent_form_signed",
+      "question": "Consent form signed by both applicant and co-applicant",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_executive_checked_original_kyc",
+      "question": "RCU Executive Checked all original KYC before disbursement",
+      "fieldType": "multiSelect",
+      "isRequired": true,
+      "options": [
+        "Adhaar Card",
+        "Bank Passbook",
+        "Voter ID",
+        "Ration Card",
+        "Job card issued by MANREGA"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_executive_checked_original_kyc_adhaar",
+      "question": "Adhaar Card",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_executive_checked_original_kyc_bank_passbook",
+      "question": "Bank Passbook",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_executive_checked_original_kyc_voter_id",
+      "question": "Voter ID",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_executive_checked_original_kyc_ration_card",
+      "question": "Ration Card",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "rcu_executive_checked_original_kyc_job_card",
+      "question": "Job card issued by MANREGA",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "loan_passbook_issued",
+      "question": "Loan Passbook issued",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No",
+        "Not Applicable"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "loan_passbook_issued_if_no_reason",
+      "question": "If No, mention the reason",
+      "fieldType": "text",
+      "isRequired": false,
+      "hint": "Enter reason if Loan Passbook not issued",
+      "conditional": {
+        "dependsOn": "loan_passbook_issued",
+        "showIfValue": "No"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "customer_awareness_video_shown",
+      "question": "Is Customer Awareness Video shown to Group",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "borrowers_live_picture_matched",
+      "question": "Borrower's live picture available in merc matched with borrowers and their KYCs",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "loan_applied_is_perpetual",
+      "question": "Whether the loan applied is Perpetual?",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "if_perpetual_loan_knows_group",
+      "question": "If Yes, applicant should know other members of the group or vice versa",
+      "fieldType": "text",
+      "isRequired": false,
+      "hint": "Explain how applicant knows other members or vice versa",
+      "conditional": {
+        "dependsOn": "loan_applied_is_perpetual",
+        "showIfValue": "Yes"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    },
+    {
+      "id": "perpetual_loan_consent",
+      "question": "In case of Perpetual loans, Whether consent of group members is available",
+      "fieldType": "dropdown",
+      "isRequired": false,
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "conditional": {
+        "dependsOn": "loan_applied_is_perpetual",
+        "showIfValue": "Yes"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333"
+      }
+    }
+  ]
+}

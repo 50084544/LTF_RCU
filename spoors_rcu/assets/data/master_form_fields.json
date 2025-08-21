@@ -1,0 +1,209 @@
+{
+  "formFields": [
+    {
+      "id": "customer_name",
+      "question": "Customer Name",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Enter full name as per records",
+      "helpText": "Name should match with official documents",
+      "validationRules": {
+        "minLength": 3,
+        "maxLength": 50,
+        "pattern": "^[a-zA-Z ]*$"
+      },
+      "appearance": {
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#333333",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1.0,
+        "borderRadius": 8.0
+      }
+    },
+    {
+      "id": "loan_purpose",
+      "question": "Purpose of Loan",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Home Purchase",
+        "Home Renovation",
+        "Education",
+        "Vehicle Purchase",
+        "Medical Expenses",
+        "Debt Consolidation",
+        "Business",
+        "Other"
+      ],
+      "hint": "Select the primary purpose for this loan",
+      "appearance": {
+        "backgroundColor": "#F5F5F5",
+        "textColor": "#333333",
+        "borderColor": "#CCCCCC"
+      }
+    },
+    {
+      "id": "loan_amount",
+      "question": "Loan Amount",
+      "fieldType": "number",
+      "isRequired": true,
+      "hint": "Enter amount in INR",
+      "validationRules": {
+        "min": 10000,
+        "max": 10000000
+      }
+    },
+    {
+      "id": "tenure",
+      "question": "Loan Tenure (in months)",
+      "fieldType": "number",
+      "isRequired": true,
+      "hint": "Enter number of months",
+      "validationRules": {
+        "min": 12,
+        "max": 240
+      }
+    },
+    {
+      "id": "employment_type",
+      "question": "Employment Type",
+      "fieldType": "radio",
+      "isRequired": true,
+      "options": [
+        "Salaried",
+        "Self-Employed",
+        "Business Owner",
+        "Retired",
+        "Other"
+      ]
+    },
+    {
+      "id": "id_proof",
+      "question": "Upload ID Proof",
+      "fieldType": "imageUpload",
+      "isRequired": true,
+      "helpText": "Please upload clear copy of Aadhaar/PAN/Passport/Driving License",
+      "validationRules": {
+        "maxSize": 5,
+        "allowedFormats": ["jpg", "jpeg", "png", "pdf"]
+      }
+    },
+    {
+      "id": "address_proof",
+      "question": "Upload Address Proof",
+      "fieldType": "imageUpload",
+      "isRequired": true,
+      "helpText": "Please upload clear copy of Utility Bill/Aadhaar/Passport",
+      "validationRules": {
+        "maxSize": 5,
+        "allowedFormats": ["jpg", "jpeg", "png", "pdf"]
+      }
+    },
+    {
+      "id": "income_source",
+      "question": "Source of Income",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Salary",
+        "Business Income",
+        "Professional Fees",
+        "Investments",
+        "Rental Income",
+        "Pension",
+        "Other"
+      ]
+    },
+    {
+      "id": "monthly_income",
+      "question": "Monthly Income",
+      "fieldType": "number",
+      "isRequired": true,
+      "hint": "Enter amount in INR",
+      "validationRules": {
+        "min": 10000
+      }
+    },
+    {
+      "id": "existing_emi",
+      "question": "Total Existing EMI (if any)",
+      "fieldType": "number",
+      "isRequired": false,
+      "hint": "Enter amount in INR",
+      "validationRules": {
+        "min": 0
+      }
+    },
+    {
+      "id": "marital_status",
+      "question": "Marital Status",
+      "fieldType": "dropdown",
+      "isRequired": true,
+      "options": [
+        "Single",
+        "Married",
+        "Divorced",
+        "Widowed"
+      ]
+    },
+    {
+      "id": "address",
+      "question": "Current Residential Address",
+      "fieldType": "text",
+      "isRequired": true,
+      "hint": "Enter complete address with pincode"
+    },
+    {
+      "id": "phone",
+      "question": "Mobile Number",
+      "fieldType": "phone",
+      "isRequired": true,
+      "hint": "Enter 10-digit mobile number",
+      "validationRules": {
+        "pattern": "^[6-9]\\d{9}$"
+      }
+    },
+    {
+      "id": "email",
+      "question": "Email Address",
+      "fieldType": "email",
+      "isRequired": true,
+      "hint": "Enter valid email address",
+      "validationRules": {
+        "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+      }
+    },
+    {
+      "id": "terms_consent",
+      "question": "I agree to the terms and conditions",
+      "fieldType": "checkbox",
+      "isRequired": true,
+      "options": ["Yes"]
+    },
+    {
+      "id": "signature",
+      "question": "Signature",
+      "fieldType": "signature",
+      "isRequired": true,
+      "helpText": "Draw your signature in the box below"
+    },
+    {
+      "id": "customer_location",
+      "question": "Current Location",
+      "fieldType": "location",
+      "isRequired": false,
+      "helpText": "Share your current location for verification"
+    },
+    {
+      "id": "additional_documents",
+      "question": "Additional Supporting Documents",
+      "fieldType": "file",
+      "isRequired": false,
+      "helpText": "Upload any additional documents to support your application",
+      "validationRules": {
+        "maxSize": 10,
+        "allowedFormats": ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+      }
+    }
+  ]
+}

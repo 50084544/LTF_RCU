@@ -1,0 +1,306 @@
+[
+  {
+    "id": "Status",
+    "question": "Status",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Visited",
+      "Not visited"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "IfNotVisitedReason",
+    "question": "If not visited",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Advance collection",
+      "On behalf collection"
+    ],
+    "conditional": {
+      "dependsOn": "Status",
+      "showIfValue": "Not visited"
+    },
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "ApprovalTakenOnBehalfCollection",
+    "question": "Approval taken for on behalf collection",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "conditional": {
+      "dependsOn": "IfNotVisitedReason",
+      "showIfValue": "On behalf collection"
+    },
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "NoOfBorrowersPresent",
+    "question": "No of Borrowers Present during Collection time",
+    "fieldType": "number",
+    "isRequired": false,
+    "hint": "Enter number of borrowers present",
+    "validationRules": {
+      "min": 0,
+      "max": 99
+    },
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "IsGroupMeetingDone",
+    "question": "Is Group meeting done?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "IsFLOVisitingOnDueDate",
+    "question": "Is the FLO visiting the Customer Or Group on the due date?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "IsPassbookIssued",
+    "question": "Is the passbooks are issued to group members",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "LoanPassbookUpdated",
+    "question": "Were loan passbooks properly updated (Collection amount /Date/Signature) of previous collection meetings/ Live meetings?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "PaymentReceived",
+    "question": "Payment received from Borrower or Group",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "CollectionThroughMMRL",
+    "question": "Is the collection happened through MM/RL.",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "EMICollectedInFLOBank",
+    "question": "Did the FLO Collect the EMI amount in his own Bank Account",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "EMIMatchWithSOA",
+    "question": "Is the EMI payments of all the group members (whom risk manager met with) matching with SOA",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "FLOBiometricDevice",
+    "question": "Has the FLO brought the biometric device along with the demand sheet during the collection visit?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "BorrowerInFLONativeVillage",
+    "question": "Is the borrower living in a FLO native village (Same village) (1KMS)",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "NoOfCustomersBeyondGeoLimit",
+    "question": "No of customer stay beyond Geo limit of 30kms from MC",
+    "fieldType": "number",
+    "isRequired": false,
+    "hint": "Enter number of customers beyond 30kms",
+    "validationRules": {
+      "min": 0,
+      "max": 99
+    },
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "CollectionMeetingOtherLocation",
+    "question": "Collection meeting done from other then collection point or customer's house - (Shop, Club, other then customer's house)",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "AnyFakeLoanOrDummy",
+    "question": "Any fake loan or Dummy/Ghost Loan found",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "BloodRelativesInSameGroup",
+    "question": "Blood and close relatives are in same group",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "ForeclosureAmountNotDeposited",
+    "question": "Foreclosure amount collected but not deposited",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "FinalRemarks",
+    "question": "Final Remarks",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter any final remarks",
+    "validationRules": {
+      "maxLength": 500
+    },
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  },
+  {
+    "id": "OverallStatus",
+    "question": "Overall Status",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Discrepant",
+      "Non-Discrepant"
+    ],
+    "appearance": {
+      "backgroundColor": "#FFFFFF",
+      "textColor": "#333333"
+    }
+  }
+]

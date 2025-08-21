@@ -1,0 +1,257 @@
+{
+  "forms": [
+    {
+      "formId": "sample",
+      "title": "Customer Feedback Form",
+      "fields": [
+        {
+          "id": "name",
+          "question": "What is your name?",
+          "fieldType": "text",
+          "isRequired": true,
+          "hint": "Enter your full name"
+        },
+        {
+          "id": "age",
+          "question": "How old are you?",
+          "fieldType": "number",
+          "isRequired": true,
+          "hint": "Enter your age",
+          "validationRules": {
+            "min": 18,
+            "max": 100
+          }
+        },
+        {
+          "id": "email",
+          "question": "What is your email address?",
+          "fieldType": "text",
+          "isRequired": true,
+          "hint": "Enter your email",
+          "validationRules": {
+            "regex": ".*@.*\\..*",
+            "regexMessage": "Please enter a valid email address"
+          }
+        },
+        {
+          "id": "satisfaction",
+          "question": "How satisfied are you with our service?",
+          "fieldType": "dropdown",
+          "isRequired": true,
+          "options": ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"]
+        },
+        {
+          "id": "features",
+          "question": "Which features do you use? (Select all that apply)",
+          "fieldType": "checkbox",
+          "isRequired": false,
+          "options": ["Messaging", "Video Calls", "File Sharing", "Screen Sharing", "Recording"]
+        },
+        {
+          "id": "screenshot",
+          "question": "Upload a screenshot of the issue (if applicable)",
+          "fieldType": "imageUpload",
+          "isRequired": false,
+          "hint": "Tap to upload an image"
+        },
+        {
+          "id": "preferredContact",
+          "question": "Preferred contact method",
+          "fieldType": "radio",
+          "isRequired": true,
+          "options": ["Email", "Phone", "In-app notification"]
+        },
+        {
+          "id": "appointmentDate",
+          "question": "Preferred appointment date",
+          "fieldType": "date",
+          "isRequired": false
+        },
+        {
+          "id": "feedback",
+          "question": "Additional comments or suggestions",
+          "fieldType": "text",
+          "isRequired": false,
+          "hint": "Please provide any additional feedback"
+        }
+      ],
+      "submitEndpoint": "/feedback/submit"
+    },
+    {
+      "formId": "sliders",
+      "title": "Feedback with Sliders",
+      "subtitle": "Rate our services using sliders",
+      "description": "Please use the sliders to provide your feedback on various aspects of our service",
+      "submitEndpoint": "/forms/slider/submit",
+      "fields": [
+        {
+          "id": "satisfaction",
+          "question": "How satisfied are you with our service?",
+          "fieldType": "slider",
+          "isRequired": true,
+          "metadata": {
+            "min": 0,
+            "max": 10,
+            "divisions": 10,
+            "label": "{value}/10"
+          },
+          "appearance": {
+            "activeColor": "#4CAF50",
+            "inactiveColor": "#C8E6C9"
+          }
+        },
+        {
+          "id": "speed",
+          "question": "Rate the speed of our service",
+          "fieldType": "slider",
+          "isRequired": true,
+          "metadata": {
+            "min": 1,
+            "max": 5,
+            "divisions": 4,
+            "label": "{value} stars"
+          },
+          "appearance": {
+            "activeColor": "#2196F3",
+            "inactiveColor": "#BBDEFB"
+          }
+        },
+        {
+          "id": "usability",
+          "question": "How easy was it to use our application?",
+          "fieldType": "slider",
+          "isRequired": true,
+          "metadata": {
+            "min": 0,
+            "max": 100,
+            "divisions": 10,
+            "label": "{value}%"
+          },
+          "appearance": {
+            "activeColor": "#FFC107",
+            "inactiveColor": "#FFECB3"
+          }
+        },
+        {
+          "id": "comments",
+          "question": "Additional comments",
+          "fieldType": "text",
+          "isRequired": false,
+          "hint": "Please provide any additional feedback",
+          "metadata": {
+            "multiline": true,
+            "minLines": 3,
+            "maxLines": 5
+          }
+        }
+      ]
+    },
+    {
+      "formId": "sectioned",
+      "title": "Sectioned Form Example",
+      "subtitle": "Form with multiple sections",
+      "description": "This form demonstrates how to organize fields into logical sections",
+      "submitEndpoint": "/forms/sectioned/submit",
+      "layout": {
+        "type": "sectioned",
+        "layoutConfig": {
+          "showSectionTitles": true,
+          "expandedByDefault": true,
+          "allowMultipleSectionsOpen": true
+        },
+        "appearance": {
+          "backgroundColor": "#f5f5f5",
+          "borderRadius": 8.0
+        }
+      },
+      "sections": [
+        {
+          "id": "personal_info",
+          "title": "Personal Information",
+          "description": "Please provide your personal details",
+          "fields": [
+            {
+              "id": "name",
+              "question": "Full Name",
+              "fieldType": "text",
+              "isRequired": true,
+              "hint": "Enter your full name",
+              "appearance": {
+                "backgroundColor": "#ffffff",
+                "borderRadius": 8.0,
+                "padding": {"top": 16, "right": 16, "bottom": 16, "left": 16}
+              }
+            },
+            {
+              "id": "email",
+              "question": "Email Address",
+              "fieldType": "email",
+              "isRequired": true,
+              "hint": "Enter your email address",
+              "validationRules": {
+                "regex": ".*@.*\\..*",
+                "regexMessage": "Please enter a valid email address"
+              }
+            },
+            {
+              "id": "phone",
+              "question": "Phone Number",
+              "fieldType": "phone",
+              "isRequired": false,
+              "hint": "Enter your phone number"
+            }
+          ]
+        },
+        {
+          "id": "preferences",
+          "title": "Preferences",
+          "description": "Tell us about your preferences",
+          "fields": [
+            {
+              "id": "interests",
+              "question": "Areas of Interest",
+              "fieldType": "checkbox",
+              "isRequired": true,
+              "options": ["Technology", "Sports", "Arts", "Science", "Travel", "Food"]
+            },
+            {
+              "id": "communication_preference",
+              "question": "Preferred Communication Channel",
+              "fieldType": "radio",
+              "isRequired": true,
+              "options": ["Email", "SMS", "Phone Call", "Push Notification"]
+            }
+          ]
+        },
+        {
+          "id": "feedback",
+          "title": "Additional Feedback",
+          "fields": [
+            {
+              "id": "satisfaction",
+              "question": "How satisfied are you with our service?",
+              "fieldType": "rating",
+              "isRequired": true,
+              "metadata": {
+                "maxRating": 5,
+                "ratingType": "star"
+              }
+            },
+            {
+              "id": "comments",
+              "question": "Additional Comments",
+              "fieldType": "text",
+              "isRequired": false,
+              "hint": "Please share any additional feedback",
+              "metadata": {
+                "multiline": true,
+                "minLines": 3,
+                "maxLines": 5
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

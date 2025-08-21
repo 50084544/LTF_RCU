@@ -1,0 +1,331 @@
+[
+  {
+    "id": "CustomerContactable",
+    "label": "Is customer contactable on phone",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "LoanTaken",
+    "label": "Loan Taken (Yes / No)",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "DateOfPDAV",
+    "label": "Date of PDAV done",
+    "fieldType": "date",
+    "isRequired": false
+  },
+  {
+    "id": "AddressTraceable",
+    "label": "Is the customer's address traceable?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "IfNotTraceableAction",
+    "label": "If No (Need to co-ordinate/escalated to the respective sales team)",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Escalated", "Not Escalated"],
+    "conditional": { "dependsOn": "AddressTraceable", "showIfValue": "No" }
+  },
+  {
+    "id": "IfYesCaptureHouseImage",
+    "label": "If Yes, capture image of the house",
+    "fieldType": "image",
+    "isRequired": false,
+    "conditional": { "dependsOn": "AddressTraceable", "showIfValue": "Yes" }
+  },
+  {
+    "id": "MetWith",
+    "label": "At time of visit met with",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Borrower", "Co-Borrower", "Family members", "None"]
+  },
+  {
+    "id": "IsAssetSeen",
+    "label": "Is the Asset seen at the time of visit?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "ActualAssetMakeModel",
+    "label": "Actual Asset (Make, Model)",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "AssetMakeModelMatch",
+    "label": "Does asset make model match with system records?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Yes", "No"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "AssetRegNumberMatch",
+    "label": "Does Asset Registration number match with system records?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Yes", "No"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "EngineNumber",
+    "label": "Engine number as per vehicle seen",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "ChassisNumber",
+    "label": "Chassis number as per vehicle seen",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "InvoiceDetailsMatch",
+    "label": "Do the details in INVOICE matches?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Yes", "No"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "RCNumber",
+    "label": "RC received. If yes, please share RC number",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "RCNotReceivedReason",
+    "label": "If No, mention the reason (RC)",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "InsuranceCertReceived",
+    "label": "Insurance Certificate received?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Yes", "No"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "Yes" }
+  },
+  {
+    "id": "AssetNotSeenWhere",
+    "label": "If asset not seen at the time of visit, where is the asset?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Work", "Field", "Others"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "AssetNotSeenLocation",
+    "label": "If asset not seen at the time of visit, where is the asset (Within village / Outside village)?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Within village", "Outside village"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "AssetAvailableWithWhom",
+    "label": "Asset available with whom?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Blood relative", "Other relative", "Any other third party"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "ThirdPartyDetails",
+    "label": "If third party, take details",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "AssetAvailableWithWhom", "showIfValue": "Any other third party" }
+  },
+  {
+    "id": "ConfirmAssetMatch",
+    "label": "Confirm Asset (Make, Model)",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Match", "No Match"],
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "AssetMismatchDetails",
+    "label": "If No Match, mention the mismatched details",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "ConfirmAssetMatch", "showIfValue": "No Match" }
+  },
+  {
+    "id": "RCNumberNotSeen",
+    "label": "RC received. If yes, please share RC number (Not seen)",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "RCNotReceivedReasonNotSeen",
+    "label": "If No, mention the reason (RC Not seen)",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "LoanTakenForSelf",
+    "label": "Is the loan taken for self?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "LoanTakenForWhom",
+    "label": "If No, then taken for whom?",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Relative", "Third party"],
+    "conditional": { "dependsOn": "LoanTakenForSelf", "showIfValue": "No" }
+  },
+  {
+    "id": "MMRAmountPaidByWhom",
+    "label": "MMR amount paid by whom?",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "MMRAmountPaid",
+    "label": "MMR amount paid?",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "EMIPaidByWhom",
+    "label": "EMI is paid by Whom?",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "NeighbourFeedbackAssetNotSeen",
+    "label": "Neighbour feedback if asset is not seen?",
+    "fieldType": "text",
+    "isRequired": false,
+    "conditional": { "dependsOn": "IsAssetSeen", "showIfValue": "No" }
+  },
+  {
+    "id": "NeighbourFeedbackOnly",
+    "label": "If at time of visit Borrower, Co-Borrower, Family members are not met, and only feedback taken from neighbour",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "StatusTaggingCase",
+    "label": "STATUS Tagging case as",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": [
+      "Customer Available, Vehicle Available",
+      "Customer Available, Vehicle Not Available",
+      "Customer Not Available, Vehicle Available",
+      "Customer Not Available, Vehicle Not Available"
+    ]
+  },
+  {
+    "id": "LocalOrOGL",
+    "label": "Local or OGL",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "IfOGLMentionKms",
+    "label": "If OGL, mention Kms",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "AgencyName",
+    "label": "Agency Name",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "InitiateDate",
+    "label": "Initiate Date",
+    "fieldType": "date",
+    "isRequired": false
+  },
+  {
+    "id": "ReportDate",
+    "label": "Report Date",
+    "fieldType": "date",
+    "isRequired": false
+  },
+  {
+    "id": "FieldVisitRemarks",
+    "label": "Field Visit Remarks",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "RemarksByARM",
+    "label": "Remarks by ARM",
+    "fieldType": "text",
+    "isRequired": false
+  },
+  {
+    "id": "ARMRemarks",
+    "label": "ARM remarks",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Non-discrepant", "Discrepant"]
+  },
+  {
+    "id": "ARMOutcomeSubReason",
+    "label": "ARM OUTCOME: SUB REASON",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Non discrepant, vehicle with customer, loan confirmed by customer with matching details",
+      "Non discrepant, vehicle with relative, loan confirmed by customer with matching details",
+      "Discrepant, vehicle with customer or relative, FI mismatch",
+      "Discrepant, vehicle with customer or relative, asset details mismatch",
+      "Discrepant, vehicle returned to dealer",
+      "Discrepant, vehicle repossessed",
+      "Discrepant, vehicle with 3rd party as confirmed by customer, customer confirmed loan",
+      "Discrepancy, any other, give details"
+    ]
+  },
+  {
+    "id": "DMZMRemarks",
+    "label": "DM/ZM remarks",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": ["Process oversight", "Investigation"]
+  },
+  {
+    "id": "DMZMOutcomeSubReason",
+    "label": "DM/ZM OUTCOME: SUB REASON",
+    "fieldType": "dropdown",
+    "isRequired": false,
+    "options": [
+      "Non discrepant, vehicle with customer, loan confirmed by customer with matching details",
+      "Non discrepant, vehicle with relative, loan confirmed by customer with matching details",
+      "Discrepant, vehicle with customer or relative, FI mismatch",
+      "Discrepant, vehicle with customer or relative, asset details mismatch",
+      "Discrepant, vehicle returned to dealer",
+      "Discrepant, vehicle repossessed",
+      "Discrepant, vehicle with 3rd party as confirmed by customer, customer confirmed loan",
+      "Discrepancy, any other, give details"
+    ]
+  }
+]

@@ -1,0 +1,269 @@
+[
+  {
+    "id": "IsBorrowerTraceable",
+    "question": "Is the Borrower traceable?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BorrowerProfile",
+    "question": "Is the Borrower involved in any of the mentioned profile?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Existing"]
+  },
+  {
+    "id": "AdditionalAmountAsked",
+    "question": "Was any additional amount asked by the LTFS employee to get the loan?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "BorrowerCredentialsMatch",
+    "question": "Is the Borrower credentials (i.e Primary KYC) matching with the details provided in the system?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "BorrowerRelatedToGroup",
+    "question": "Is the Borrower related to anyone in the group?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "BorrowerRelatedToLTFSStaff",
+    "question": "Is the Borrower related to any LTFS staff?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "BorrowerFamiliarWithGroup",
+    "question": "Is the borrower familiar with other members of the group?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "VillageSameForAll",
+    "question": "Is the village same for all the borrowers in the group?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "GroupFormedByMembers",
+    "question": "Is the group formed by member themselves?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "CoBorrowerRelationToBorrower",
+    "question": "Is the co-borrower related to the borrower as per the LTFS policy guidelines?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "LoanPolicyExplained",
+    "question": "Was loan policy explained to the borrower by LTFS staff?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "AppraisalDoneByBPM",
+    "question": "Was the appraisal done by BPM?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "PassbookAvailableWithBorrower",
+    "question": "Is the passbook available with the borrower?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "LoanPassbookUpdated",
+    "question": "Were loan passbooks properly updated (Collection amount /Date/Signature) of previous collection meetings/ Live meetings?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "CollectionOnDueDate",
+    "question": "Is the collection happening on due date?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "ReceiptIssuedForLastEMI",
+    "question": "Is the receipt issued for last EMI paid?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "PersonAliveDeceasedList",
+    "question": "Is the person alive whose name is reflecting under deceased list?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "BorrowerInRentedOrSlum",
+    "question": "Is the borrower residing in a rented house or slum area?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "ApplicantAndCoApplicantPresentAtMC",
+    "question": "Were the applicant and co-applicant present at the MC during the loan disbursement?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "MemberHouseWithinRadius",
+    "question": "Is the member's house located within radius suggested in Operation Policy?",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BulkDigitalPaymentThroughSameUPI",
+    "question": "Bulk digital payments done through the same UPI ID",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"]
+  },
+  {
+    "id": "BorrowerInFLONativeVillage",
+    "question": "Is the borrower living in a FLO native village (Same village) (1KMS)",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "ForeclosureAmountNotDeposited",
+    "question": "Foreclosure amount collected but not deposited",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "PaymentDoneWithFLOAndDelay",
+    "question": "Is Payment done with FLO and he did delay deposition",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "FLOCollectedEMIInOwnBank",
+    "question": "Is the FLO Collected the EMI amount in his own Bank Account",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "Yes",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "ApprovalTakenOnBehalfCollection",
+    "question": "Is Approval taken for on behalf collection",
+    "fieldType": "dropdown",
+    "isRequired": true,
+    "options": ["Yes", "No"],
+    "discrepantLogic": {
+      "value": "No",
+      "status": "Discrepant"
+    }
+  },
+  {
+    "id": "FinalRemarks",
+    "question": "Final Remarks",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter any final remarks",
+    "validationRules": {
+      "maxLength": 500
+    }
+  },
+  {
+    "id": "OverallStatus",
+    "question": "Overall Status",
+    "fieldType": "text",
+    "isRequired": false,
+    "hint": "Enter overall status"
+  }
+]

@@ -1,0 +1,275 @@
+[
+  {
+    "section": "Visit Details - Header",
+    "fields": [
+      {
+        "id": "InvestigationManagerNamePSID",
+        "label": "Investigation Manager-Name-PS ID",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter Investigation Manager Name and PS ID"
+      },
+      {
+        "id": "FromDate",
+        "label": "From Date",
+        "fieldType": "date",
+        "isRequired": true,
+        "hint": "Select the audit start date",
+        "validationRules": {
+          "allowFutureDate": false
+        }
+      },
+      {
+        "id": "ToDate",
+        "label": "To Date",
+        "fieldType": "date",
+        "isRequired": true,
+        "hint": "Select the audit end date",
+        "validationRules": {
+          "allowFutureDate": false
+        }
+      },
+      {
+        "id": "DaysAuditCarried",
+        "label": "Days Audit Carried (To date - From Date)",
+        "fieldType": "calculated",
+        "isRequired": false,
+        "calculation": "Difference between To Date and From Date in days"
+      }
+    ]
+  },
+  {
+    "section": "Branch Overview",
+    "fields": [
+      {
+        "id": "BranchNameCode",
+        "label": "Branch Name (Code)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "hint": "Select Branch",
+        "dataSource": "Branch code Master"
+      },
+      {
+        "id": "State",
+        "label": "State",
+        "fieldType": "autoFilled",
+        "isRequired": false,
+        "hint": "Auto-populated State (based on Branch Code)"
+      },
+      {
+        "id": "Region",
+        "label": "Region",
+        "fieldType": "autoFilled",
+        "isRequired": false,
+        "hint": "Auto-populated Region (based on Branch Code)"
+      },
+      {
+        "id": "Territory",
+        "label": "Territory",
+        "fieldType": "autoFilled",
+        "isRequired": false,
+        "hint": "Auto-populated Territory (based on Branch Code)"
+      },
+      {
+        "id": "BMPSID",
+        "label": "BM-PS ID",
+        "fieldType": "dropdown",
+        "isRequired": false,
+        "hint": "Select BM PS ID"
+      },
+      {
+        "id": "BMName",
+        "label": "BM-Name",
+        "fieldType": "autoFilled",
+        "isRequired": false,
+        "hint": "Auto-populated BM Name (based on BM PS ID)"
+      },
+      {
+        "id": "TMPSID",
+        "label": "TM-PS ID",
+        "fieldType": "dropdown",
+        "isRequired": false,
+        "hint": "Select TM PS ID"
+      },
+      {
+        "id": "TMName",
+        "label": "TM-Name",
+        "fieldType": "autoFilled",
+        "isRequired": false,
+        "hint": "Auto-populated TM Name (based on TM PS ID)"
+      },
+      {
+        "id": "ACMPSID",
+        "label": "ACM-PS ID",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "hint": "Select ACM PS ID"
+      },
+      {
+        "id": "DateLastAuditRiskManager",
+        "label": "Date of Last Audit by Risk Manager",
+        "fieldType": "date",
+        "isRequired": true,
+        "hint": "Select last audit date (back dated only)",
+        "validationRules": {
+          "allowFutureDate": false
+        }
+      },
+      {
+        "id": "RMPSID",
+        "label": "RM PS ID",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "hint": "Select RM PS ID"
+      },
+      {
+        "id": "RMName",
+        "label": "RM Name",
+        "fieldType": "autoFilled",
+        "isRequired": true,
+        "hint": "Auto-populated RM Name (based on RM PS ID)"
+      },
+      {
+        "id": "DateLastAuditCRM",
+        "label": "Date of Last Audit by CRM",
+        "fieldType": "date",
+        "isRequired": true,
+        "hint": "Select last audit date by CRM (back dated only)",
+        "validationRules": {
+          "allowFutureDate": false
+        }
+      },
+      {
+        "id": "NameOfCRM",
+        "label": "Name of CRM",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter name of CRM"
+      },
+      {
+        "id": "CustomerBase",
+        "label": "Customer Base",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter customer base"
+      },
+      {
+        "id": "ODCases_0_30_to_30_60",
+        "label": "OD cases (0-30 to 30-60)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter OD cases (0-30 to 30-60)"
+      },
+      {
+        "id": "OD_60plus",
+        "label": "OD (60+)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter OD (60+)"
+      },
+      {
+        "id": "NumFLOs",
+        "label": "# FLOs",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of FLOs"
+      },
+      {
+        "id": "NumFCOs",
+        "label": "# FCOs",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of FCOs"
+      },
+      {
+        "id": "NumResignedEmployees",
+        "label": "# Resigned Employees (Last 3 Month)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of resigned employees"
+      },
+      {
+        "id": "NumAbscondedEmployees",
+        "label": "# Absconded Employees (Last 3 Months)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of absconded employees"
+      },
+      {
+        "id": "NumFLOsIntegrity",
+        "label": "# FLOs Involved in Integrity (Last 3 Months) (ActiveInactive)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of FLOs involved in integrity"
+      },
+      {
+        "id": "NumFCOsIntegrity",
+        "label": "# FCOs Involved in Integrity (Last 3 Months) (ActiveInactive)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of FCOs involved in integrity"
+      },
+      {
+        "id": "Num24MonthsEmployees",
+        "label": "# 24 Months Employees",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter number of 24 months employees"
+      },
+      {
+        "id": "BranchCategoryRAG",
+        "label": "Branch Category (RAG)",
+        "fieldType": "text",
+        "isRequired": true,
+        "hint": "Enter branch category (RAG)"
+      }
+    ]
+  },
+  {
+    "section": "Branch Category- For self consumption",
+    "fields": [
+      {
+        "id": "NILToken6Months",
+        "label": "NIL-Token generation in last 6 months",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"]
+      },
+      {
+        "id": "85CollectionEfficiency",
+        "label": "85 Collection Efficiency (Last Quarter)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"]
+      },
+      {
+        "id": "GreenBranchesCRM_RMAudit",
+        "label": "Green branches in CRM and RM Audit (Last Quarter)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"]
+      },
+      {
+        "id": "95NonDiscrepantLastMonth",
+        "label": "95 Non-Discrepant in last month",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"]
+      },
+      {
+        "id": "BranchesProcessViolationBRS",
+        "label": "Branches identified as increase in process violation but no frauds - Identification in BRS (2 quarter)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"]
+      },
+      {
+        "id": "PortfolioViolationBRS",
+        "label": "Branches identified as increase in Portfolio violation but no frauds - Identification in BRS (Last 2)",
+        "fieldType": "dropdown",
+        "isRequired": true,
+        "options": ["Yes", "No"]
+      }
+    ]
+  }
+]

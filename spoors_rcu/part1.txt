@@ -1,0 +1,7 @@
+// Force rebuild  
+if (context is StatefulElement) {  
+  context.markNeedsBuild();  
+} else {  
+  // Request rebuild using helper function  
+  _requestRebuild(context, formKey);  
+} 
