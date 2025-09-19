@@ -45,7 +45,6 @@ dependencies:
   device_info_plus: 11.5.0
   package_info_plus: ^8.3.1
   flutter_jailbreak_detection: ^1.9.0
-  flutter_logs: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -96,7 +95,7 @@ flutter:
     - assets/animations/NoTasks.json
     - assets/certificate/wildcard.ltfinance.com.pem
     - assets/certificate/wildcard.ltfinance.com.key
-    - assets/certificate/test.salesforce.crt
+    - assets/certificate/login.salesforce.crt
   #---------LOCAL FONTS---------#
   fonts:
     - family: PlayfairDisplay

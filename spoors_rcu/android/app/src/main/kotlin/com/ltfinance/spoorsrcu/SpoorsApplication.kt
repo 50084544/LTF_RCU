@@ -1,4 +1,4 @@
-package com.ltfinance.spoorsrcu
+package com.ltfinance.spoors_rcu
 
 import com.spoors.rcu.security.SecurityCheckPlugin
 import io.flutter.app.FlutterApplication

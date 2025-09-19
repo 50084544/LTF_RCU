@@ -24,16 +24,6 @@ class LogoutRequested extends SessionEvent {
   List<Object?> get props => [];
 }
 
-class CheckSession extends SessionEvent {
-  const CheckSession();
+class CheckSession extends SessionEvent {}
 
-  @override
-  List<Object?> get props => [];
-}
-
-class ClearSessionError extends SessionEvent {
-  const ClearSessionError();
-
-  @override
-  List<Object?> get props => [];
-}
+class ClearSessionError extends SessionEvent {}

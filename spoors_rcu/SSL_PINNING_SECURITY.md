@@ -13,7 +13,7 @@ We've implemented multi-certificate pinning to avoid app breakage during certifi
 - **Primary & Backup Certificates**: The application now supports multiple certificates (primary + backup).
 - **Certificate Storage**: Certificates are stored in the assets folder and loaded at runtime.
 - **Certificate Paths**:
-  - Primary: `assets/certificate/test.salesforce.crt`
+  - Primary: `assets/certificate/login.salesforce.crt`
   - Backup: `assets/certificate/wildcard.ltfinance.com.pem`
 
 ### 2. Runtime Security Checks

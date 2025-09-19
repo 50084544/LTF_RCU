@@ -13,10 +13,8 @@ import UIKit
         switch call.method {
         case "checkJailbreak":
             result(checkJailbreak())
-        case "checkHooking":  // Match the method name used in Dart code
+        case "checkIosHooking":
             result(checkIosHooking())
-        case "checkDebugging":  // Match the method name used in Dart code
-            result(checkDebugger())
         case "isDebuggerAttached":
             result(checkDebugger())
         default:

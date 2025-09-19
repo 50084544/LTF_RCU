@@ -12,10 +12,12 @@ import 'package:hive/hive.dart';
 class CustomDrawer extends StatefulWidget {
   // Add a parameter to indicate if user is on dashboard
   final bool isOnDashboard;
+  final String? username;
 
   const CustomDrawer({
     super.key,
     this.isOnDashboard = false, // Default to false
+    this.username,
   });
 
   @override
@@ -31,7 +33,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   void initState() {
     super.initState();
-    _loadUsername();
+    // Use the passed username if available, otherwise load from Hive
+    if (widget.username != null && widget.username!.isNotEmpty) {
+      setState(() {
+        username =
+            widget.username![0].toUpperCase() + widget.username!.substring(1);
+      });
+    } else {
+      _loadUsername();
+    }
   }
 
   Future<void> _loadUsername() async {

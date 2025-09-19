@@ -1076,7 +1076,7 @@ class _WorkidState extends State<Workid> {
             ),
           ),
         ),
-        drawer: const CustomDrawer(),
+        drawer: CustomDrawer(username: widget.username),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : TabBarView(

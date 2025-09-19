@@ -38,18 +38,9 @@ class SecurityCheckPlugin : FlutterPlugin, MethodCallHandler {
                 result.success(checkRoot(suPaths, rootPackages))
             }
             "checkHooking" -> {
-                // Simple version without parameters to match the Dart method call
-                val defaultHookingFrameworks = mapOf(
-                    "Frida" to listOf("/data/local/tmp/frida-server", "/data/local/tmp/re.frida.server"),
-                    "Xposed" to listOf("/system/lib/libxposed_art.so", "/system/framework/XposedBridge.jar"),
-                    "Magisk" to listOf("/sbin/magisk", "/sbin/.magisk", "/data/adb/magisk")
-                )
-                val defaultFridaPorts = listOf(27042, 27043)
-                result.success(checkHooking(defaultHookingFrameworks, defaultFridaPorts))
-            }
-            "checkDebugging" -> {
-                // New method to match the Dart method call
-                result.success(isDebuggerAttached())
+                val hookingFrameworks = call.argument<Map<String, List<String>>>("hookingFrameworks") ?: emptyMap()
+                val fridaPorts = call.argument<List<Int>>("fridaPorts") ?: emptyList()
+                result.success(checkHooking(hookingFrameworks, fridaPorts))
             }
             "isDebuggable" -> {
                 result.success(isDebuggable())

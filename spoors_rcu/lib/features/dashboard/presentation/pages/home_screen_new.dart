@@ -496,7 +496,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(isOnDashboard: true),
+      drawer: CustomDrawer(isOnDashboard: true, username: username),
       appBar: AppBar(
         toolbarHeight: 60,
         title: Text(

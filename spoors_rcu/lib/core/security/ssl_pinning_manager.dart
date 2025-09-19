@@ -15,7 +15,7 @@ class SSLPinningManager {
 
   // Certificate paths for multiple certificates (primary + backup)
   static const List<String> _certificatePaths = [
-    'assets/certificate/test.salesforce.crt', // Primary certificate
+    'assets/certificate/login.salesforce.crt', // Primary certificate
     'assets/certificate/wildcard.ltfinance.com.pem', // Backup certificate
   ];
 

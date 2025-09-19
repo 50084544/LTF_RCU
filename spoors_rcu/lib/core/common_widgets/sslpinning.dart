@@ -10,7 +10,7 @@ abstract class CertificateReader {
   static bool _initialized = false;
   // Update to use the Salesforce certificate
   static const String CERTIFICATE_PATH =
-      'assets/certificate/test.salesforce.crt';
+      'assets/certificate/login.salesforce.crt';
   // Keep the key path the same if needed
   static const String PRIVATE_KEY_PATH =
       'assets/certificate/wildcard.ltfinance.com.key';

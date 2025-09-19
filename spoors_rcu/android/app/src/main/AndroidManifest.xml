@@ -6,11 +6,11 @@
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:label="SPOORS RCU"
-        android:name="com.ltfinance.spoorsrcu.SpoorsApplication"
+        android:name="com.ltfinance.spoors_rcu.SpoorsApplication"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="false">
         <activity
-            android:name=".MainActivity"
+            android:name="com.ltfinance.spoors_rcu.MainActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:taskAffinity=""
@@ -37,7 +37,7 @@
                 <data 
                 android:scheme="https" 
                 android:host = "spoorsrcu.com"
-                 android:pathPrefix="/home" />
+                 android:pathPrefix="/homepage" />
             </intent-filter>
             <!-- <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

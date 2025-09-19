@@ -9,7 +9,6 @@ import '../../core/config/environment_config.dart';
 import 'package:BMS/core/common_widgets/sslpinning.dart';
 import 'package:flutter/foundation.dart';
 import 'package:BMS/core/security/security_service.dart';
-import 'package:flutter_logs/flutter_logs.dart';
 
 class ApiCall {
   static final ApiCall _instance = ApiCall._internal();
@@ -133,9 +132,9 @@ class ApiCall {
             "3MVG9pcaEGrGRoTIJAfV6nezKhM20xn.GHZekaOsVQ_.brE.6VPTyMuxaAhU2FnQYeNLtdfplfpq6F0QPxmcd",
         "client_secret":
             "1C970FF68250B704F8C4D955FA83F2BC67DDF899EDA4D8A6F35277690E007A54",
-        "username": "ltfs.integration@persistent.com.ltfs.sit",
+        "username": "Aman.raj@techilaservices.com.sit ",
         "grant_type": "password",
-        "password": "Persistent@12",
+        "password": "Passion@1",
       };
 
       final response = await _dio.post(
@@ -736,10 +735,7 @@ class ApiCall {
       // await box.put('access_token', accessToken);
 
       final payload = {
-        //"PS_No": "50058358",
-        //"PS_No": "50084544",
         "PS_No": username,
-        //"PS_No": "50060063",
         "pageNumber": 1,
       };
 
@@ -754,9 +750,6 @@ class ApiCall {
           },
         ),
       );
-
-      FlutterLogs.logInfo('ApiCall', 'callTokenApi',
-          'ListView API called with payload: ${json.encode(payload)}');
 
       if (response.statusCode == 200) {
         // Process the response data to handle different formats

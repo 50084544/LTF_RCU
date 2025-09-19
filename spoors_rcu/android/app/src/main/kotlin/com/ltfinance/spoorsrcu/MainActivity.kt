@@ -9,8 +9,14 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
         
-        // Register the security plugin - this handles the method channel setup internally
+        // Register the security plugin
         flutterEngine.plugins.add(SecurityCheckPlugin())
+        
+        // Setup method channel for security checks
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, 
+                "com.spoors.rcu/security")
+                .setMethodCallHandler(SecurityCheckPlugin())
     }
 }

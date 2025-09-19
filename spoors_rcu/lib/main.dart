@@ -1,6 +1,7 @@
 //import 'package:BMS/features/activities/presentation/pages/expansion.dart';
 import 'dart:async';
 import 'package:BMS/core/network/api_service.dart';
+import 'package:BMS/features/auth/presentation/bloc/session/session_event.dart';
 import 'package:BMS/features/auth/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,15 +9,14 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'features/dashboard/presentation/pages/home_screen_new.dart';
 import 'features/auth/presentation/bloc/session/session_bloc.dart';
-import 'features/auth/presentation/bloc/session/session_event.dart';
-import 'package:BMS/features/auth/data/datasources/api_service.dart';
+import 'features/auth/data/datasources/api_service.dart';
 import 'core/constants/constants.dart';
 import 'features/auth/presentation/pages/startuppage.dart';
 import 'package:app_links/app_links.dart';
 import 'package:BMS/core/common_widgets/sslpinning.dart';
 import 'dart:io';
 import 'package:BMS/core/security/security_service.dart';
-import 'package:flutter_logs/flutter_logs.dart';
+import 'package:BMS/features/auth/presentation/pages/logoutpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,19 +24,6 @@ void main() async {
   // Initialize Hive
   await Hive.initFlutter();
   await Hive.openBox('app_state');
-
-  await FlutterLogs.initLogs(
-    logLevelsEnabled: [
-      LogLevel.ERROR,
-      LogLevel.INFO,
-      LogLevel.WARNING
-    ], // what levels to store
-    timeStampFormat: TimeStampFormat.TIME_FORMAT_READABLE,
-    directoryStructure:
-        DirectoryStructure.FOR_DATE, // keeps logs separated per day
-    logTypesEnabled: ["API", "DEVICE", "ERROR"],
-    logFileExtension: LogFileExtension.LOG, // categories
-  );
 
   try {
     await CertificateReader.initialize();
@@ -59,18 +46,16 @@ void main() async {
   }
 
   // Continue with app initialization...
-  final apiService = ApiService();
-
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) =>
-              SessionBloc(apiService: apiService)..add(const CheckSession()),
+              SessionBloc(apiService: ApiService())..add(CheckSession()),
         ),
       ],
       child: MyApp(
-        apiService: apiService,
+        apiService: ApiService(),
         isLoggedIn: false,
         stpService: ApiCall(),
       ),
@@ -294,7 +279,7 @@ class _MyAppState extends State<MyApp> {
           // '/test-stp': (context) => const TestSTP(),
           '/startuppage': (context) => const Startuppage(),
           // '/web-login': (context) => const WebLoginPage(),
-          //'/logout': (context) => const LogoutPage(),
+          '/logout': (context) => const LogoutPage(),
           '/splash': (context) => const SplashScreen(),
         },
         debugShowCheckedModeBanner: false,

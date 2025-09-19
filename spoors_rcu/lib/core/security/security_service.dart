@@ -463,7 +463,7 @@ class SecurityService {
           // Get the current package name using environment variables
           // since PackageInfo may not be available
           final packageName =
-              'com.ltfinance.spoorsrcu'; // Hard-coded as fallback
+              'com.ltfinance.spoors_rcu'; // Hard-coded as fallback
 
           final result = await Process.run('dumpsys', ['package', packageName]);
           final output = result.stdout.toString();
