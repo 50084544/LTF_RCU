@@ -164,6 +164,19 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
     if (recordData == null || recordData.isEmpty) {
       return result;
     }
+
+    bool isAssignedToRCUVendor = false;
+    bool isAssignedToRCUARM = false;
+
+    if (recordData['RecordTypeName'] == 'PDAV') {
+      // Check for Assigned_To__c field value
+      if (recordData.containsKey('Assigned_To__c')) {
+        String assignedToValue = recordData['Assigned_To__c']?.toString() ?? '';
+        isAssignedToRCUVendor = assignedToValue == 'Assigned to RCU Vendor';
+        isAssignedToRCUARM = assignedToValue == 'Assigned to RCU ARM';
+      }
+    }
+
     // Update schema fields with values from record data
     for (var field in result) {
       if (field.apiName.isNotEmpty &&
@@ -763,7 +776,7 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
       try {
         final FormApiService apiService = FormApiService();
 
-        print('Submitting form with fields: ${widget.username}');
+        // print('Submitting form with fields: ${widget.username}');
         final result = await apiService.submitForm(
           recordType: widget.recordType ?? '',
           formFields: formFields,

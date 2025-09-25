@@ -5,13 +5,13 @@
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
-        android:label="SPOORS RCU"
+        android:label="SACHET"
         android:name="com.ltfinance.spoors_rcu.SpoorsApplication"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="false">
         <activity
             android:name="com.ltfinance.spoors_rcu.MainActivity"
-            android:exported="false"
+            android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
             android:theme="@style/LaunchTheme"

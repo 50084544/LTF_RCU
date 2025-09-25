@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:BMS/core/security/security_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,11 +12,13 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _initialController;
   late AnimationController _expandController;
   late AnimationController _loaderController;
+  late List<AnimationController> _letterControllers;
 
   // Animations
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _expandAnimation;
+  late List<Animation<double>> _letterAnimations;
 
   // Animation states
   bool _showFullText = false;
@@ -26,13 +27,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // First animation: R appears
+    // First animation: S appears
     _initialController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1500));
 
-    // Second animation: Text expands
+    // Second animation: Text expands and S slides to the left
     _expandController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+        vsync: this, duration: const Duration(milliseconds: 1000));
 
     // Infinite loader animation
     _loaderController = AnimationController(
@@ -40,8 +41,24 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 1),
     )..repeat();
 
-    // Run security checks while splash screen is showing
-    _performSecurityChecks();
+    // Individual letter animations (A, C, H, E, T)
+    _letterControllers = List.generate(
+      5,
+      (index) => AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 500),
+      ),
+    );
+
+    _letterAnimations = List.generate(
+      5,
+      (index) => Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _letterControllers[index],
+          curve: Curves.easeOutCubic,
+        ),
+      ),
+    );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _initialController, curve: Curves.easeIn),
@@ -52,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _expandAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _expandController, curve: Curves.easeOutQuad),
+      CurvedAnimation(parent: _expandController, curve: Curves.easeOutCubic),
     );
 
     // Sequence the animations
@@ -62,30 +79,35 @@ class _SplashScreenState extends State<SplashScreen>
           _showFullText = true;
         });
         _expandController.forward();
+        _startLetterAnimations();
         _loadInitialData();
       });
     });
+  }
+
+  void _startLetterAnimations() {
+    // Start each letter animation with a delay between them
+    for (int i = 0; i < _letterControllers.length; i++) {
+      Future.delayed(Duration(milliseconds: 100 + (i * 120)), () {
+        if (mounted) {
+          _letterControllers[i].forward();
+        }
+      });
+    }
   }
 
   Future<void> _loadInitialData() async {
     // Simulate API call or any async logic here
     await Future.delayed(const Duration(seconds: 3)); // Replace with real logic
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/startuppage');
+      try {
+        Navigator.of(context).pushReplacementNamed('/startuppage');
+      } catch (e) {
+        debugPrint('Navigation error: $e');
+        // Fallback to home if there's an issue with navigation
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
     }
-  }
-
-  // Perform security checks
-  Future<void> _performSecurityChecks() async {
-    // Initialize security service
-    final securityService = SecurityService();
-    await securityService.initialize();
-
-    // Run security checks
-    await securityService.runSecurityChecks();
-
-    // If not secure, the app will exit automatically
-    // This adds an additional security check at app startup
   }
 
   @override
@@ -93,6 +115,12 @@ class _SplashScreenState extends State<SplashScreen>
     _initialController.dispose();
     _expandController.dispose();
     _loaderController.dispose();
+
+    // Dispose letter animation controllers
+    for (var controller in _letterControllers) {
+      controller.dispose();
+    }
+
     super.dispose();
   }
 
@@ -104,80 +132,180 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // This ensures we always have at least one child
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Ensure this Row also has at least one child
-                    if (_showFullText)
-                      AnimatedBuilder(
-                        animation: _expandAnimation,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _expandAnimation.value,
-                            child: const Text(
-                              "LTF ",
-                              style: TextStyle(
-                                fontSize: 60,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'PlayfairDisplay',
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    else
-                      const SizedBox.shrink(), // Empty widget as fallback
+            // Animation container
+            SizedBox(
+              height: 100,
+              width: 350, // Ensure enough width for the text
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: _showFullText
+                      // Second animation stage - show full text with sliding animation
+                      ? AnimatedBuilder(
+                          animation: _expandAnimation,
+                          builder: (context, child) {
+                            // Use a completely different approach with RichText
+                            // This guarantees no gaps between characters
+                            final TextStyle baseStyle = getSachetTextStyle(60);
 
-                    // Always include the R
-                    const Text(
-                      "R",
-                      style: TextStyle(
-                        fontSize: 60,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'PlayfairDisplay',
-                        color: Colors.white,
-                      ),
-                    ),
-
-                    if (_showFullText)
-                      AnimatedBuilder(
-                        animation: _expandAnimation,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _expandAnimation.value,
-                            child: const Text(
-                              "CU",
-                              style: TextStyle(
-                                fontSize: 60,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'PlayfairDisplay',
-                                color: Colors.white,
+                            return Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    // The S character with consistent vertical alignment
+                                    WidgetSpan(
+                                      child: Text(
+                                        "S",
+                                        style: baseStyle,
+                                      ),
+                                    ),
+                                    // Individual letter animations for ACHET with staggered effects
+                                    WidgetSpan(
+                                      child: Transform.translate(
+                                        offset: Offset(
+                                            0,
+                                            10 *
+                                                (1 -
+                                                    _letterAnimations[0]
+                                                        .value)),
+                                        child: Transform.scale(
+                                          scale: 0.5 +
+                                              (0.5 *
+                                                  _letterAnimations[0].value),
+                                          child: Opacity(
+                                            opacity:
+                                                _letterAnimations[0].value *
+                                                    _expandAnimation.value,
+                                            child: Text(
+                                              "A",
+                                              style: baseStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: Transform.translate(
+                                        offset: Offset(
+                                            0,
+                                            10 *
+                                                (1 -
+                                                    _letterAnimations[1]
+                                                        .value)),
+                                        child: Transform.scale(
+                                          scale: 0.5 +
+                                              (0.5 *
+                                                  _letterAnimations[1].value),
+                                          child: Opacity(
+                                            opacity:
+                                                _letterAnimations[1].value *
+                                                    _expandAnimation.value,
+                                            child: Text(
+                                              "C",
+                                              style: baseStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: Transform.translate(
+                                        offset: Offset(
+                                            0,
+                                            10 *
+                                                (1 -
+                                                    _letterAnimations[2]
+                                                        .value)),
+                                        child: Transform.scale(
+                                          scale: 0.5 +
+                                              (0.5 *
+                                                  _letterAnimations[2].value),
+                                          child: Opacity(
+                                            opacity:
+                                                _letterAnimations[2].value *
+                                                    _expandAnimation.value,
+                                            child: Text(
+                                              "H",
+                                              style: baseStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: Transform.translate(
+                                        offset: Offset(
+                                            0,
+                                            10 *
+                                                (1 -
+                                                    _letterAnimations[3]
+                                                        .value)),
+                                        child: Transform.scale(
+                                          scale: 0.5 +
+                                              (0.5 *
+                                                  _letterAnimations[3].value),
+                                          child: Opacity(
+                                            opacity:
+                                                _letterAnimations[3].value *
+                                                    _expandAnimation.value,
+                                            child: Text(
+                                              "E",
+                                              style: baseStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    WidgetSpan(
+                                      child: Transform.translate(
+                                        offset: Offset(
+                                            0,
+                                            10 *
+                                                (1 -
+                                                    _letterAnimations[4]
+                                                        .value)),
+                                        child: Transform.scale(
+                                          scale: 0.5 +
+                                              (0.5 *
+                                                  _letterAnimations[4].value),
+                                          child: Opacity(
+                                            opacity:
+                                                _letterAnimations[4].value *
+                                                    _expandAnimation.value,
+                                            child: Text(
+                                              "T",
+                                              style: baseStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      )
-                    else
-                      const SizedBox.shrink(), // Empty widget as fallback
-                  ],
+                            );
+                          },
+                        )
+                      // First animation stage - only show S in center
+                      : Center(
+                          child: Text(
+                            "S",
+                            style: getSachetTextStyle(60),
+                          ),
+                        ),
                 ),
               ),
             ),
 
             const SizedBox(height: 30),
 
-            // Progress indicator (always included)
+            // Progress indicator
             SizedBox(
               width: 200,
               child: LinearProgressIndicator(
-                backgroundColor: Colors.blue[100],
-                color: Colors.blue[800],
+                backgroundColor: Colors.white.withOpacity(0.3),
+                color: Colors.white,
                 minHeight: 4,
               ),
             ),
@@ -187,83 +315,23 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget _buildInitialR() {
-    return Text(
-      'R',
-      style: TextStyle(
-        fontFamily: 'PlayfairDisplay',
-        fontWeight: FontWeight.bold,
-        fontSize: 80,
-        color: Colors.white,
-        shadows: [
-          Shadow(
-            color: Colors.black.withOpacity(0.3),
-            offset: const Offset(0, 2),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExpandingText() {
-    return AnimatedBuilder(
-      animation: _expandAnimation,
-      builder: (context, child) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'LTF ',
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontWeight: FontWeight.bold,
-                fontSize: 40 * _expandAnimation.value,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              'R',
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontWeight: FontWeight.bold,
-                fontSize: 80,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              'CU',
-              style: TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontWeight: FontWeight.bold,
-                fontSize: 40 * _expandAnimation.value,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+  // Helper method to apply text shadow style
+  TextStyle getSachetTextStyle(double fontSize) {
+    return TextStyle(
+      // Using a standard font that renders more predictably for spacing
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.bold,
+      fontSize: fontSize,
+      letterSpacing: -1.5, // Reduce letter spacing to close gaps
+      color: Colors
+          .white, // Set text color to black for visibility on yellow background
+      shadows: [
+        Shadow(
+          color: Colors.white.withOpacity(0.5),
+          offset: const Offset(0, 1),
+          blurRadius: 3,
+        ),
+      ],
     );
   }
 }

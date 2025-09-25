@@ -40,6 +40,7 @@ class _WorkidState extends State<Workid> {
   bool isLoading = true;
   String? _errorMessage;
   Map<String, dynamic>? recordData; // Add this to store the loaded record data
+  String? _schemaError; // Add this to store schema loading errors
 
   @override
   void initState() {
@@ -47,7 +48,7 @@ class _WorkidState extends State<Workid> {
     _initHiveBox();
   }
 
-//Future<void> _loadRecordById(List<String>? recordlist) async {
+  //Future<void> _loadRecordById(List<String>? recordlist) async {
   Future<void> _loadRecordById(String recordId) async {
     try {
       Map<String, dynamic>? data;
@@ -73,8 +74,9 @@ class _WorkidState extends State<Workid> {
 
       // If not found, check in all_records.json
       if (data == null) {
-        final allRecordsJsonData =
-            await LocalJsonStorage.readResponse('all_records');
+        final allRecordsJsonData = await LocalJsonStorage.readResponse(
+          'all_records',
+        );
         if (allRecordsJsonData != null &&
             allRecordsJsonData['records'] is List) {
           for (var record in allRecordsJsonData['records']) {
@@ -179,9 +181,9 @@ class _WorkidState extends State<Workid> {
       }
     } catch (e) {
       // Show error to user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading record: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading record: $e')));
     } finally {
       setState(() {
         isLoading = false;
@@ -228,114 +230,33 @@ class _WorkidState extends State<Workid> {
     });
 
     try {
+      // Load records first - this should happen regardless of schema API success
+      await _loadRecordsFromStorage();
+
+      // Try to load schema, but don't block record display if it fails
       String title_text = replaceSpacesWithUnderscores(widget.title);
 
-      // Load schema from JSON
+      // Load schema from JSON storage
       final schemaRaw = await LocalJsonStorage.readResponse('schema');
-      // Don't assume schemaRaw is a Map<String, dynamic>
       if (schemaRaw != null) {
+        //print('Schema loaded from local JSON storage.');
       } else {
-        // Fallback to API
-        final ApiCall apiCall = ApiCall();
-        final result =
-            await apiCall.callApi(endpoint: 'schema', title: title_text);
-
-        if (!result['success']) {
+        // Try to fetch schema from API, but don't block UI
+        try {
+          final ApiCall apiCall = ApiCall();
+          await apiCall.callApi(endpoint: 'schema', title: title_text);
+          // Even if schema fetch fails, we'll continue with displaying records
+        } catch (e) {
+          //print('Schema API failed, but continuing with record display: $e');
+          // Store this error for later use when opening forms
           setState(() {
-            _errorMessage = 'Failed to load schema: ${result["message"]}';
-            isLoading = false;
+            _schemaError = 'Failed to load schema: $e';
           });
-          return;
         }
       }
-
-      // Load records from local JSON
-      final recordsRaw = await LocalJsonStorage.readResponse('records');
-      final allRecordsRaw = await LocalJsonStorage.readResponse('all_records');
-
-      // Handle both Map and List data types
-      dynamic recordsData = recordsRaw;
-      dynamic allRecordsData = allRecordsRaw;
-
-      if (recordsData != null) {}
-
-      List<dynamic>? matchingRecords;
-
-      // Try to find records in records.json
-      if (recordsData != null) {
-        if (recordsData is Map) {
-          final recordsForType = recordsData[widget.title];
-          if (recordsForType is List && recordsForType.isNotEmpty) {
-            matchingRecords = recordsForType;
-          }
-        } else if (recordsData is List) {
-          // If records is directly a list, filter by record type
-          final filteredRecords = recordsData
-              .where((record) =>
-                  record is Map && record['RecordTypeName'] == widget.title)
-              .toList();
-          if (filteredRecords.isNotEmpty) {
-            matchingRecords = filteredRecords;
-          }
-        }
-      }
-
-      // Fallback to all_records.json
-      if (matchingRecords == null && allRecordsData != null) {
-        // Check all_records.json for ${widget.title} records
-        if (allRecordsData is List) {
-          // Handle list format directly
-          matchingRecords = allRecordsData
-              .where((record) =>
-                  record is Map && record['RecordTypeName'] == widget.title)
-              .toList();
-        } else if (allRecordsData is Map) {
-          // Handle map format
-          final records = allRecordsData['records'];
-          if (records is List) {
-            matchingRecords = records
-                .where((record) =>
-                    record is Map && record['RecordTypeName'] == widget.title)
-                .toList();
-          }
-        }
-        if (matchingRecords != null && matchingRecords.isNotEmpty) {}
-      }
-
-      // Fallback to Hive
-      if (matchingRecords == null) {
-        final box = await Hive.openBox('records');
-        final recordsForType = box.get(widget.title);
-
-        if (recordsForType is List && recordsForType.isNotEmpty) {
-          matchingRecords = recordsForType;
-        } else {
-          final allRecords = box.get('all_records');
-          if (allRecords is Map && allRecords['records'] is List) {
-            final List<dynamic> records = allRecords['records'];
-            matchingRecords = records
-                .where((record) =>
-                    record is Map && record['RecordTypeName'] == widget.title)
-                .toList();
-            if (matchingRecords.isNotEmpty) {
-              // Found matching records in Hive
-            }
-          }
-        }
-      }
-
-      // Set state with found records
-      setState(() {
-        storedIds = matchingRecords ?? [];
-      });
-
-      // Load individual record
-      // if (widget.recordId != null) {
-      //   _loadRecordById(widget.recordId!);
-      // }
     } catch (e) {
       setState(() {
-        _errorMessage = 'An error occurred: ${e.toString()}';
+        _errorMessage = 'Error loading records: ${e.toString()}';
       });
     } finally {
       setState(() {
@@ -344,9 +265,127 @@ class _WorkidState extends State<Workid> {
     }
   }
 
+  // Add a new method to separate record loading logic
+  Future<void> _loadRecordsFromStorage() async {
+    // Load records from local JSON
+    final recordsRaw = await LocalJsonStorage.readResponse('records');
+    final allRecordsRaw = await LocalJsonStorage.readResponse('all_records');
+
+    // Handle both Map and List data types
+    dynamic recordsData = recordsRaw;
+    dynamic allRecordsData = allRecordsRaw;
+
+    List<dynamic>? matchingRecords;
+
+    // Try to find records in records.json
+    if (recordsData != null) {
+      if (recordsData is Map) {
+        final recordsForType = recordsData[widget.title];
+        if (recordsForType is List && recordsForType.isNotEmpty) {
+          matchingRecords = recordsForType;
+        }
+      } else if (recordsData is List) {
+        // If records is directly a list, filter by record type
+        final filteredRecords = recordsData
+            .where(
+              (record) =>
+                  record is Map && record['RecordTypeName'] == widget.title,
+            )
+            .toList();
+        if (filteredRecords.isNotEmpty) {
+          matchingRecords = filteredRecords;
+        }
+      }
+    }
+
+    // Fallback to all_records.json
+    if (matchingRecords == null && allRecordsData != null) {
+      // Check all_records.json for ${widget.title} records
+      if (allRecordsData is List) {
+        // Handle list format directly
+        matchingRecords = allRecordsData
+            .where(
+              (record) =>
+                  record is Map && record['RecordTypeName'] == widget.title,
+            )
+            .toList();
+      } else if (allRecordsData is Map) {
+        // Handle map format
+        final records = allRecordsData['records'];
+        if (records is List) {
+          matchingRecords = records
+              .where(
+                (record) =>
+                    record is Map && record['RecordTypeName'] == widget.title,
+              )
+              .toList();
+        }
+      }
+    }
+
+    // Fallback to Hive
+    if (matchingRecords == null) {
+      final box = await Hive.openBox('records');
+      final recordsForType = box.get(widget.title);
+
+      if (recordsForType is List && recordsForType.isNotEmpty) {
+        matchingRecords = recordsForType;
+      } else {
+        final allRecords = box.get('all_records');
+        if (allRecords is Map && allRecords['records'] is List) {
+          final List<dynamic> records = allRecords['records'];
+          matchingRecords = records
+              .where(
+                (record) =>
+                    record is Map && record['RecordTypeName'] == widget.title,
+              )
+              .toList();
+        }
+      }
+    }
+
+    // Set state with found records, even if empty
+    setState(() {
+      storedIds = matchingRecords ?? [];
+    });
+  }
+
+  // Future<void> _loadRecordById(String recordId) async {
+  //   try {
+  //     final box = await Hive.openBox('records');
+  //     final data = box.get(recordId);
+
+  //     if (data != null) {
+  //       setState(() {
+  //         // Convert the data to a Map if it isn't already
+  //         if (data is Map) {
+  //           recordData = Map<String, dynamic>.from(data);
+  //         } else {
+  //           recordData = {'data': data};
+  //         }
+
+  //         // Create a list with this record and store it for the UI
+  //         storedIds = [recordData];
+  //       });
+  //     } else {
+  //     }
+  //   } catch (e) {
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+  // String replaceSpacesWithUnderscores(String input) {
+  //   return input.replaceAll(' ', '_');
+  // }
+
   // Future<void> _initHiveBox() async {
   //   setState(() {
   //     _errorMessage = null;
+  //     isLoading = true;
+  //     storedIds = [];
   //   });
 
   //   try {
@@ -370,14 +409,14 @@ class _WorkidState extends State<Workid> {
     'Pending',
     'Complete',
     'Approved',
-    'Rejected'
+    'Rejected',
   ];
 
   final List<Color> cardColors = [
     Colors.blue,
     Colors.yellow,
     Colors.green,
-    Colors.red
+    Colors.red,
   ];
 
   // Open form for viewing or editing a record
@@ -394,7 +433,7 @@ class _WorkidState extends State<Workid> {
   //   );
   // }
 
-// Updated method to pass both recordId and recordType
+  // Updated method to pass both recordId and recordType
   // Updated method to handle the form result
   void _openForm(String recordType, String? recordId, String? uid) async {
     // Show loading dialog
@@ -442,7 +481,7 @@ class _WorkidState extends State<Workid> {
     // Dismiss the loading dialog before showing the form
     if (context.mounted) Navigator.of(context).pop();
 
-    print('Opening form for recordType: ${widget.username}');
+    // print('Opening form for recordType: ${widget.username}');
     // Now open the form
     final result = await Navigator.push(
       context,
@@ -455,8 +494,9 @@ class _WorkidState extends State<Workid> {
           schemaLoader: () async {
             try {
               // Try to load from JSON files first
-              final schemaJsonData =
-                  await LocalJsonStorage.readResponse('schema');
+              final schemaJsonData = await LocalJsonStorage.readResponse(
+                'schema',
+              );
               if (schemaJsonData != null) {
                 List<dynamic> fields = [];
                 bool foundSpecificFields = false;
@@ -473,8 +513,9 @@ class _WorkidState extends State<Workid> {
                   // Try with spaces replaced with underscores
                   if (!foundSpecificFields) {
                     String recordTypeAlt = recordType.replaceAll(' ', '_');
-                    if (schemaJsonData['recordTypes']
-                        .containsKey(recordTypeAlt)) {
+                    if (schemaJsonData['recordTypes'].containsKey(
+                      recordTypeAlt,
+                    )) {
                       fields = schemaJsonData['recordTypes'][recordTypeAlt];
                       foundSpecificFields = true;
                     }
@@ -510,10 +551,12 @@ class _WorkidState extends State<Workid> {
                   } else if (schemaJsonData is List) {
                     // If it's a flat list, use fields without a recordType as defaults
                     fields = schemaJsonData
-                        .where((field) =>
-                            field is Map &&
-                            (!field.containsKey('recordType') ||
-                                field['recordType'] == null))
+                        .where(
+                          (field) =>
+                              field is Map &&
+                              (!field.containsKey('recordType') ||
+                                  field['recordType'] == null),
+                        )
                         .toList();
                   }
 
@@ -590,9 +633,11 @@ class _WorkidState extends State<Workid> {
     }
   }
 
-// Method to update record status after form submission
+  // Method to update record status after form submission
   Future<void> _updateRecordStatusAfterFormSubmission(
-      String recordId, String newStatus) async {
+    String recordId,
+    String newStatus,
+  ) async {
     try {
       bool updated = false;
 
@@ -646,8 +691,9 @@ class _WorkidState extends State<Workid> {
       }
 
       // Update in all_records.json
-      final allRecordsJsonData =
-          await LocalJsonStorage.readResponse('all_records');
+      final allRecordsJsonData = await LocalJsonStorage.readResponse(
+        'all_records',
+      );
       if (allRecordsJsonData != null && allRecordsJsonData['records'] is List) {
         List<dynamic> records = allRecordsJsonData['records'];
         bool foundInAll = false;
@@ -663,7 +709,9 @@ class _WorkidState extends State<Workid> {
 
         if (foundInAll) {
           await LocalJsonStorage.saveResponse(
-              'all_records', allRecordsJsonData);
+            'all_records',
+            allRecordsJsonData,
+          );
           jsonUpdated = true;
         }
       }
@@ -775,9 +823,10 @@ class _WorkidState extends State<Workid> {
       onTap: isCompleted
           ? () => _showRecordDetails(recordData)
           : () => _openForm(
-              widget.title,
-              recordData['Work_Id__c'] ?? recordData['recordId'],
-              recordData['Id']),
+                widget.title,
+                recordData['Work_Id__c'] ?? recordData['recordId'],
+                recordData['Id'],
+              ),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(12),
@@ -788,7 +837,9 @@ class _WorkidState extends State<Workid> {
           borderRadius: BorderRadius.circular(10),
           border: Border(
             left: BorderSide(
-                width: 5, color: isCompleted ? Colors.green : indicatorColor),
+              width: 5,
+              color: isCompleted ? Colors.green : indicatorColor,
+            ),
           ),
           boxShadow: [
             BoxShadow(
@@ -796,7 +847,7 @@ class _WorkidState extends State<Workid> {
               spreadRadius: 1,
               blurRadius: 6,
               offset: const Offset(0, 2),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -809,8 +860,10 @@ class _WorkidState extends State<Workid> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(recordType,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        recordType,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       Text('Work ID: $recordId'),
                       Text('DATE: $date'),
                       //if (villageName != 'N/A') Text('Village: $villageName'),
@@ -848,7 +901,7 @@ class _WorkidState extends State<Workid> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -911,21 +964,28 @@ class _WorkidState extends State<Workid> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Display the Record Type and ID first
-                Text('Type: ${displayData['RecordTypeName'] ?? widget.title}',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text('ID: ${displayData['Work_Id__c'] ?? 'Unknown'}',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text('Status: Completed',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    )),
+                Text(
+                  'Type: ${displayData['RecordTypeName'] ?? widget.title}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 8),
                 Text(
-                    'Submission Time: ${DateTime.now().toString().substring(0, 19)}',
-                    style: TextStyle(fontStyle: FontStyle.italic)),
+                  'ID: ${displayData['Work_Id__c'] ?? 'Unknown'}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Status: Completed',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Submission Time: ${DateTime.now().toString().substring(0, 19)}',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
                 const SizedBox(height: 16),
               ],
             ),
@@ -941,7 +1001,7 @@ class _WorkidState extends State<Workid> {
     );
   }
 
-// Helper method to format field names for display
+  // Helper method to format field names for display
   // Method removed as it was unused
 
   @override
@@ -1001,8 +1061,10 @@ class _WorkidState extends State<Workid> {
                         minWidth: screenWidth * 0.08,
                         minHeight: screenWidth * 0.08,
                       ),
-                      icon: const Icon(Icons.arrow_downward_rounded,
-                          color: Colors.black),
+                      icon: const Icon(
+                        Icons.arrow_downward_rounded,
+                        color: Colors.black,
+                      ),
                       onPressed: () async {
                         final selectedRecordType =
                             await showModalBottomSheet<String>(
@@ -1079,92 +1141,102 @@ class _WorkidState extends State<Workid> {
         drawer: CustomDrawer(username: widget.username),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : TabBarView(
-                children: List.generate(3, (tabIndex) {
-                  // If we have real record data loaded, use it
-                  if (storedIds != null) {
-                    //List<dynamic> recordList;
-                    List<dynamic> recordList =
-                        storedIds is List ? storedIds : [];
-                    // Ensure storedIds is a List
-                    if (storedIds is List) {
-                      recordList = storedIds;
-                    } else if (storedIds is Map) {
-                      // If it's a Map, try to extract records
-                      recordList = storedIds['records'] ?? [];
-                    } else {
-                      // If not a supported type, create an empty list
-                      recordList = [];
-                    }
+            : _errorMessage != null
+                ? Center(child: Text(_errorMessage!)) // Show general errors
+                : storedIds.isEmpty
+                    ? const Center(
+                        child: Text('No records found')) // Empty state
+                    : TabBarView(
+                        children: List.generate(3, (tabIndex) {
+                          // If we have real record data loaded, use it
+                          if (storedIds != null) {
+                            //List<dynamic> recordList;
+                            List<dynamic> recordList =
+                                storedIds is List ? storedIds : [];
+                            // Ensure storedIds is a List
+                            if (storedIds is List) {
+                              recordList = storedIds;
+                            } else if (storedIds is Map) {
+                              // If it's a Map, try to extract records
+                              recordList = storedIds['records'] ?? [];
+                            } else {
+                              // If not a supported type, create an empty list
+                              recordList = [];
+                            }
 
-                    // Convert each record to Map if needed
-                    final List<Map<String, dynamic>> records =
-                        recordList.map<Map<String, dynamic>>((record) {
-                      if (record is Map) {
-                        return Map<String, dynamic>.from(record);
-                      } else {
-                        // If record is not a map, create a simple map with default values
-                        return {
-                          'Id': record.toString(),
-                          'RecordTypeName': widget.title,
-                          'Disbursement_status__c': 'Pending',
-                        };
-                      }
-                    }).toList();
+                            // Convert each record to Map if needed
+                            final List<Map<String, dynamic>> records =
+                                recordList.map<Map<String, dynamic>>((record) {
+                              if (record is Map) {
+                                return Map<String, dynamic>.from(record);
+                              } else {
+                                // If record is not a map, create a simple map with default values
+                                return {
+                                  'Id': record.toString(),
+                                  'RecordTypeName': widget.title,
+                                  'Disbursement_status__c': 'Pending',
+                                };
+                              }
+                            }).toList();
 
-                    // Define a function to get the status based on record fields
-                    String getStatus(Map<String, dynamic> record) {
-                      return record['status'] ?? 'Pending';
-                    }
+                            // Define a function to get the status based on record fields
+                            String getStatus(Map<String, dynamic> record) {
+                              return record['status'] ?? 'Pending';
+                            }
 
-                    // Filter based on tab index
-                    List<Map<String, dynamic>> filteredRecords = [];
-                    switch (tabIndex) {
-                      case 0: // All
-                        filteredRecords =
-                            List<Map<String, dynamic>>.from(records);
-                        break;
-                      case 1: // Pending
-                        filteredRecords = records
-                            .where((record) => getStatus(record) == 'Pending')
-                            .toList();
-                        break;
-                      case 2: // Complete
-                        filteredRecords = records
-                            .where((record) => getStatus(record) == 'Complete')
-                            .toList();
-                        break;
-                      // case 3: // Approval/Approved
-                      //   filteredRecords = records
-                      //       .where((record) =>
-                      //           getStatus(record) == 'Approved' ||
-                      //           getStatus(record) == 'Approval')
-                      //       .toList();
-                      //   break;
-                      // case 4: // Rejected
-                      //   filteredRecords = records
-                      //       .where((record) => getStatus(record) == 'Rejected')
-                      //       .toList();
-                      //   break;
-                    }
+                            // Filter based on tab index
+                            List<Map<String, dynamic>> filteredRecords = [];
+                            switch (tabIndex) {
+                              case 0: // All
+                                filteredRecords =
+                                    List<Map<String, dynamic>>.from(
+                                  records,
+                                );
+                                break;
+                              case 1: // Pending
+                                filteredRecords = records
+                                    .where((record) =>
+                                        getStatus(record) == 'Pending')
+                                    .toList();
+                                break;
+                              case 2: // Complete
+                                filteredRecords = records
+                                    .where((record) =>
+                                        getStatus(record) == 'Complete')
+                                    .toList();
+                                break;
+                              // case 3: // Approval/Approved
+                              //   filteredRecords = records
+                              //       .where((record) =>
+                              //           getStatus(record) == 'Approved' ||
+                              //           getStatus(record) == 'Approval')
+                              //       .toList();
+                              //   break;
+                              // case 4: // Rejected
+                              //   filteredRecords = records
+                              //       .where((record) => getStatus(record) == 'Rejected')
+                              //       .toList();
+                              //   break;
+                            }
 
-                    return filteredRecords.isEmpty
-                        ? const Center(child: Text('No records found'))
-                        : ListView.builder(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: filteredRecords.length,
-                            itemBuilder: (context, index) {
-                              return _buildTaskCard(
-                                cardColors[index % cardColors.length],
-                                filteredRecords[index],
-                              );
-                            },
-                          );
-                  } else {
-                    return const Center(child: Text('No data available'));
-                  }
-                }),
-              ),
+                            return filteredRecords.isEmpty
+                                ? const Center(child: Text('No records found'))
+                                : ListView.builder(
+                                    padding: const EdgeInsets.all(16),
+                                    itemCount: filteredRecords.length,
+                                    itemBuilder: (context, index) {
+                                      return _buildTaskCard(
+                                        cardColors[index % cardColors.length],
+                                        filteredRecords[index],
+                                      );
+                                    },
+                                  );
+                          } else {
+                            return const Center(
+                                child: Text('No data available'));
+                          }
+                        }),
+                      ),
         // bottomNavigationBar: CustomBottomNavBar(
         //   currentIndex: selectedTab,
         //   onTap: (index) {
@@ -1177,7 +1249,7 @@ class _WorkidState extends State<Workid> {
     );
   }
 
-// Helper to ensure schema data exists for this record type
+  // Helper to ensure schema data exists for this record type
   Future<void> _ensureSchemaForRecordType(String recordType) async {
     try {
       final schemaData = await LocalJsonStorage.readResponse('schema');
@@ -1192,8 +1264,9 @@ class _WorkidState extends State<Workid> {
         }
       } else if (schemaData is List) {
         // If schema is a flat list, check if any field has this record type
-        bool hasFieldsForType = schemaData
-            .any((field) => field is Map && field['recordType'] == recordType);
+        bool hasFieldsForType = schemaData.any(
+          (field) => field is Map && field['recordType'] == recordType,
+        );
         if (!hasFieldsForType) {
           needsToFetchSchema = true;
         }
@@ -1203,7 +1276,9 @@ class _WorkidState extends State<Workid> {
         final ApiCall apiCall = ApiCall();
         final normalizedRecordType = replaceSpacesWithUnderscores(recordType);
         final result = await apiCall.callApi(
-            endpoint: 'schema', title: normalizedRecordType);
+          endpoint: 'schema',
+          title: normalizedRecordType,
+        );
 
         if (result['success']) {
         } else {
@@ -1215,9 +1290,11 @@ class _WorkidState extends State<Workid> {
     }
   }
 
-// Helper to save schema fields organized by record type
+  // Helper to save schema fields organized by record type
   Future<void> _saveSchemaFields(
-      List<dynamic> fields, String recordType) async {
+    List<dynamic> fields,
+    String recordType,
+  ) async {
     try {
       // Load existing schema data or create new structure
       final existing =

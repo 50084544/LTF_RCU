@@ -10,7 +10,6 @@ import 'package:xml/xml.dart';
 import 'dart:typed_data';
 import 'dart:io';
 import 'package:hive/hive.dart';
-import 'package:BMS/core/security/security_service.dart';
 
 class Startuppage extends StatefulWidget {
   final bool forceReload;
@@ -52,19 +51,6 @@ class _StartuppageState extends State<Startuppage> {
     if (widget.forceReload) {
       _resetAuth();
     }
-
-    // Perform security checks before login
-    _performSecurityChecks();
-  }
-
-  /// Run security checks before proceeding with authentication
-  Future<void> _performSecurityChecks() async {
-    // Initialize security service
-    final securityService = SecurityService();
-    await securityService.initialize();
-
-    // Run security checks - if fails, app will exit
-    await securityService.runSecurityChecks();
   }
 
   Future<void> _resetAuth() async {
@@ -81,7 +67,7 @@ class _StartuppageState extends State<Startuppage> {
   Future<void> handleUrlLoad(String? urlStr) async {
     if (urlStr == null) return;
 
-    if (urlStr.contains("spoorsrcu.com/home")) {
+    if (urlStr.contains("spoorsrcu.com/homepage")) {
       // Check if this URL contains SAML response
       if (urlStr.contains("SAMLResponse=")) {
         if (_samlResponseDetected) return; // Prevent duplicate processing
@@ -112,12 +98,12 @@ class _StartuppageState extends State<Startuppage> {
                 ? nameIdElements.first.innerText
                 : 'N/A';
 
-            // final box = await Hive.openBox('auth');
-            // await box.put(
-            //     'token', DateTime.now().millisecondsSinceEpoch.toString());
-            // await box.put('IsLoggedIn', true);
-            // await box.put('username', nameId);
-            // await box.put('email', emailValue);
+            final box = await Hive.openBox('auth');
+            await box.put(
+                'token', DateTime.now().millisecondsSinceEpoch.toString());
+            await box.put('IsLoggedIn', true);
+            await box.put('username', nameId);
+            await box.put('email', emailValue);
 
             // Show loading screen immediately and handle navigation with delay
             _showLoadingWithDelay(nameId);
@@ -142,17 +128,38 @@ class _StartuppageState extends State<Startuppage> {
       // Prevent back button navigation after logout
       onWillPop: () async => false,
       child: Scaffold(
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   toolbarHeight: 220,
+        //   title: Image.asset(
+        //     //'assets/logos/lnt_finance/LTF_logo.png',
+        //     'assets/logos/lnt_finance/Sachet_Logo.jpg',
+        //     height: 200,
+        //     fit: BoxFit.contain,
+        //     width: double.infinity,
+        //   ),
+        //   centerTitle: true,
+        //   //backgroundColor: const Color.fromARGB(255, 243, 219, 33),
+        //   backgroundColor: const Color.fromARGB(255, 0, 152, 219),
+        // ),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           toolbarHeight: 220,
-          title: Image.asset(
-            'assets/logos/lnt_finance/LTF_logo.png',
-            height: 200,
-            fit: BoxFit.cover,
-            width: double.infinity,
+          // Replace the title with flexibleSpace for better control
+          flexibleSpace: Container(
+            color: const Color.fromARGB(255, 0, 152, 219),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Image.asset(
+                  'assets/logos/lnt_finance/Sachet_Logo.jpg',
+                  height: 200, // Slightly smaller to ensure it fits properly
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
           ),
-          centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 243, 219, 33),
+          backgroundColor: const Color.fromARGB(255, 0, 152, 219),
         ),
         backgroundColor: Colors.white, // Set background color explicitly
         body: Stack(
@@ -180,7 +187,7 @@ class _StartuppageState extends State<Startuppage> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      _showLoadingScreen ? "Welcome to LTF RCU!" : "Loading...",
+                      _showLoadingScreen ? "Welcome to SACHET!" : "Loading...",
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -213,14 +220,11 @@ class _StartuppageState extends State<Startuppage> {
                     useOnLoadResource: true,
                     useShouldOverrideUrlLoading: true,
                     mediaPlaybackRequiresUserGesture: false,
-                    clearCache: true,
                   ),
                   android: AndroidInAppWebViewOptions(
                     useHybridComposition: true,
                     mixedContentMode:
                         AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
-                    allowContentAccess: false,
-                    databaseEnabled: false,
                   ),
                   ios: IOSInAppWebViewOptions(
                     allowsInlineMediaPlayback: true,
@@ -228,7 +232,7 @@ class _StartuppageState extends State<Startuppage> {
                 ),
                 initialUrlRequest: URLRequest(
                   url: WebUri(
-                      'https://adfsuat.ltfs.com/adfs/ls/idpinitiatedsignon?loginToRp=https://spoorsrcu.com/home'),
+                      'https://cloudadfs.ltfs.com/adfs/ls/idpinitiatedsignon?loginToRp=https://spoorsrcu.com/homepage'),
                 ),
                 onWebViewCreated: (controller) async {
                   _webViewController = controller;

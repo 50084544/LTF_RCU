@@ -34,13 +34,15 @@ class _LogoutPageState extends State<LogoutPage> {
         appBar: AppBar(
           toolbarHeight: 220,
           title: Image.asset(
-            'assets/logos/lnt_finance/LTF_logo.png',
+            //'assets/logos/lnt_finance/LTF_logo.png',
+            'assets/logos/lnt_finance/Sachet_Logo.jpg',
             height: 200,
             fit: BoxFit.cover,
             width: double.infinity,
           ),
           centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 243, 219, 33),
+          //backgroundColor: const Color.fromARGB(255, 243, 219, 33),
+          backgroundColor: const Color.fromARGB(255, 0, 152, 219),
         ),
         body: InAppWebView(
           initialUrlRequest: URLRequest(
@@ -57,7 +59,7 @@ class _LogoutPageState extends State<LogoutPage> {
             await _webViewController.clearCache();
           },
           onLoadStart: (controller, url) {
-            //print("Loading started: $url");
+            print("Loading started: $url");
             Navigator.pushReplacementNamed(context, '/startuppage');
             // if (url.toString().contains("wsignout")) {
             //   Navigator.pushReplacementNamed(context, '/login');

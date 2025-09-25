@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: ^3.6.0
@@ -56,12 +56,12 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.3.10
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logos/lnt_finance/LTFinance_logo.png"
+  image_path: "assets/logos/lnt_finance/SachetLogo.png"
   adaptive_icon_background: "#f3db21"
-  adaptive_icon_foreground: "assets/logos/lnt_finance/LTFinance_logo.png"
+  adaptive_icon_foreground: "assets/logos/lnt_finance/SachetLogo.png"
 
 flutter_native_splash:
   color: "#FFC107"
@@ -86,6 +86,8 @@ flutter:
     - assets/logos/lnt_finance/
     - assets/logos/lnt_finance/LTF_logo.png
     - assets/logos/lnt_finance/temp_logo.png
+    - assets/logos/lnt_finance/SachetLogo.png
+    - assets/logos/lnt_finance/Sachet_Logo.jpg
     - assets/animations/
     - assets/animations/Loading1.json
     - assets/animations/successAnimation.json
