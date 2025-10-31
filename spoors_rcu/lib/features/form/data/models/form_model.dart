@@ -759,6 +759,7 @@ class FormModel {
       value: json['value']?.toString(),
       recordType: json['recordType'],
       isRequired: json['isRequired'] ?? true,
+      //isRequired: true,
       picklistValues: picklistOptions,
     );
   }
@@ -1294,160 +1295,171 @@ class FormModel {
             // else
             // Default dropdown implementation for all other cases
             DropdownButtonFormField<String>(
-              isExpanded: true,
-              value: value?.isNotEmpty == true
-                  ? value // If there's a value from API, use it
-                  : null, // Otherwise use null to show "Select an option"
-              decoration: getFieldDecoration(),
-              style: getTextStyle(),
-              items: [
-                DropdownMenuItem<String>(
-                  value: null,
-                  child: Text('Select an option',
-                      style: isReadOnly
-                          ? getTextStyle()
-                          : const TextStyle(color: Colors.grey)),
-                ),
-                ...(picklistValues ?? [])
-                    .map((opt) => DropdownMenuItem(
-                        value: opt, child: Text(opt, style: getTextStyle())))
-                    .toList(),
-              ],
-              onChanged: isReadOnly
-                  ? null
-                  : (val) {
-                      if (val != null) {
-                        // We don't need to store the previous value anymore
-                        // String? previousValue = value;
+                isExpanded: true,
+                value: value?.isNotEmpty == true ? value : null,
+                decoration: getFieldDecoration(),
+                style: getTextStyle(),
+                items: [
+                  DropdownMenuItem<String>(
+                    value: null,
+                    child: Text('Select an option',
+                        style: isReadOnly
+                            ? getTextStyle()
+                            : const TextStyle(color: Colors.grey)),
+                  ),
+                  ...(picklistValues ?? [])
+                      .map((opt) => DropdownMenuItem(
+                          value: opt, child: Text(opt, style: getTextStyle())))
+                      .toList(),
+                ],
+                onChanged: isReadOnly
+                    ? null
+                    : (val) {
+                        if (val != null) {
+                          // We don't need to store the previous value anymore
+                          // String? previousValue = value;
 
-                        // Update value
-                        value = val;
+                          // Update value
+                          value = val;
 
-                        // Special handling for Disbursal Status field
-                        if (apiName == 'Disbursal_Status__c') {
-                          FormModel.updateDisbursalStatus(val);
-                        }
+                          // Special handling for Disbursal Status field
+                          if (apiName == 'Disbursal_Status__c') {
+                            FormModel.updateDisbursalStatus(val);
+                          }
 
-                        // Special handling for Live_Disbursement fields
-                        if (recordType == 'Live_Disbursement') {
-                          if (apiName == 'Loan_Passbook_issued_Response__c') {
-                            // Find and update If_No_mention_the_reason__c field
-                            for (var field in _allFormFields!) {
-                              if (field.apiName ==
-                                      'If_No_mention_the_reason__c' &&
-                                  field.recordType == 'Live_Disbursement') {
-                                // Make editable only if not "Yes"
-                                bool shouldBeEditable = val != 'Yes';
-                                field.editable = shouldBeEditable;
+                          // Special handling for Live_Disbursement fields
+                          if (recordType == 'Live_Disbursement') {
+                            if (apiName == 'Loan_Passbook_issued_Response__c') {
+                              // Find and update If_No_mention_the_reason__c field
+                              for (var field in _allFormFields!) {
+                                if (field.apiName ==
+                                        'If_No_mention_the_reason__c' &&
+                                    field.recordType == 'Live_Disbursement') {
+                                  // Make editable only if not "Yes"
+                                  bool shouldBeEditable = val != 'Yes';
+                                  field.editable = shouldBeEditable;
 
-                                // If making non-editable, clear the value
-                                if (!shouldBeEditable) {
-                                  field.value = '';
+                                  // If making non-editable, clear the value
+                                  if (!shouldBeEditable) {
+                                    field.value = '';
+                                  }
+                                  print(
+                                      'Updated If_No_mention_the_reason__c: Editable = $shouldBeEditable');
+                                  break;
                                 }
-                                print(
-                                    'Updated If_No_mention_the_reason__c: Editable = $shouldBeEditable');
-                                break;
                               }
-                            }
-                          } else if (apiName ==
-                              'Whether_the_loan_applied_is_Perpetual__c') {
-                            // Find and update If_Yes_applicant_should_know_other__c field
-                            for (var field in _allFormFields!) {
-                              if (field.apiName ==
-                                      'If_Yes_applicant_should_know_other__c' &&
-                                  field.recordType == 'Live_Disbursement') {
-                                // Make editable only if not "No"
-                                bool shouldBeEditable = val != 'No';
-                                field.editable = shouldBeEditable;
+                            } else if (apiName ==
+                                'Whether_the_loan_applied_is_Perpetual__c') {
+                              // Find and update If_Yes_applicant_should_know_other__c field
+                              for (var field in _allFormFields!) {
+                                if (field.apiName ==
+                                        'If_Yes_applicant_should_know_other__c' &&
+                                    field.recordType == 'Live_Disbursement') {
+                                  // Make editable only if not "No"
+                                  bool shouldBeEditable = val != 'No';
+                                  field.editable = shouldBeEditable;
 
-                                // If making non-editable, clear the value
-                                if (!shouldBeEditable) {
-                                  field.value = '';
+                                  // If making non-editable, clear the value
+                                  if (!shouldBeEditable) {
+                                    field.value = '';
+                                  }
+                                  print(
+                                      'Updated If_Yes_applicant_should_know_other__c: Editable = $shouldBeEditable');
+                                  break;
                                 }
-                                print(
-                                    'Updated If_Yes_applicant_should_know_other__c: Editable = $shouldBeEditable');
-                                break;
                               }
+                            } else if (apiName == 'If_not_disbursed__c') {
+                              FormModel.updateNotDisbursedReason(
+                                  val, context, formKey);
                             }
-                          } else if (apiName == 'If_not_disbursed__c') {
-                            FormModel.updateNotDisbursedReason(
-                                val, context, formKey);
+                          }
+
+                          // Special handling for PDAV fields
+                          if (recordType == 'PDAV') {
+                            if (apiName ==
+                                'Is_the_Asset_seen_at_the_time_of_visit__c') {
+                              FormModel.updateAssetVisibilityRequirements(
+                                  val, context, formKey);
+                            } else if (apiName ==
+                                'Is_the_customer_s_address_traceable__c') {
+                              FormModel.updateCustomerAddressTraceability(
+                                  val, context, formKey);
+                            } else if (apiName == 'Assigned_To__c') {
+                              FormModel.updateAssignmentStatus(
+                                  val, context, formKey);
+                            } else if (apiName ==
+                                'Insurance_Certificate_received__c') {
+                              FormModel.updateInsuranceCertificateRequirements(
+                                  val, context, formKey);
+                            } else if (apiName ==
+                                'Confirm_Asset_Make_Model__c') {
+                              FormModel.updateAssetMakeModelMatch(
+                                  val, context, formKey);
+                            } else if (apiName == 'RC_received__c') {
+                              FormModel.updateRCReceivedStatus(
+                                  val, context, formKey);
+                              if (context is StatefulElement) {
+                                (context).markNeedsBuild();
+                              }
+                            } else if (apiName == 'Local_or_OGL_Pick__c') {
+                              FormModel.updateOGLStatus(val, context, formKey);
+                            }
+                            if (context is StatefulElement) {
+                              (context).markNeedsBuild();
+                            }
+
+                            // Special handling for Collection Audit Status field
+                            if (apiName == 'Status__c' &&
+                                recordType == 'Collection_Audit') {
+                              FormModel.updateCollectionAuditStatus(
+                                  val, context, formKey);
+                            }
+
+                            // Special handling for PDAV loan relationship field
+                            if (apiName ==
+                                    'Is_the_loan_taken_for_self_Yes_No__c' &&
+                                recordType == 'PDAV') {
+                              // Debug print to confirm we're entering this condition
+                              print('PDAV loan relationship changed to: $val');
+                              FormModel.updateCollectionAuditLoanRelationship(
+                                  val, context, formKey);
+                            }
+
+                            // Special handling for BPM_Appraisal fields
+                            if (recordType == 'BPM_Appraisal' &&
+                                (apiName ==
+                                        'Did_BPM_visited_all_residence_of_borrowe__c' ||
+                                    apiName ==
+                                        'Did_BPM_verified_all_documents_of_borrow__c' ||
+                                    apiName ==
+                                        'Did_BPM_verified_Borrowers_Bank_Passbook__c')) {
+                              FormModel.updateBPMAppraisalRequirements(
+                                  val, apiName, context, formKey);
+                            }
+
+                            // Use setState in a StatefulWidget instead
+                            if (context is StatefulElement) {
+                              context.markNeedsBuild();
+                            } else {
+                              // Force rebuild in a safer way
+                              Future.microtask(() {
+                                if (formKey.currentContext != null &&
+                                    formKey.currentContext is Element) {
+                                  (formKey.currentContext as Element)
+                                      .markNeedsBuild();
+                                }
+                              });
+                            }
                           }
                         }
-
-                        // Special handling for PDAV fields
-                        if (recordType == 'PDAV') {
-                          if (apiName ==
-                              'Is_the_Asset_seen_at_the_time_of_visit__c') {
-                            FormModel.updateAssetVisibilityRequirements(
-                                val, context, formKey);
-                          } else if (apiName ==
-                              'Is_the_customer_s_address_traceable__c') {
-                            FormModel.updateCustomerAddressTraceability(
-                                val, context, formKey);
-                          } else if (apiName == 'Assigned_To__c') {
-                            FormModel.updateAssignmentStatus(
-                                val, context, formKey);
-                          } else if (apiName ==
-                              'Insurance_Certificate_received__c') {
-                            FormModel.updateInsuranceCertificateRequirements(
-                                val, context, formKey);
-                          } else if (apiName == 'Confirm_Asset_Make_Model__c') {
-                            FormModel.updateAssetMakeModelMatch(
-                                val, context, formKey);
+                        validator:
+                        (val) {
+                          if (isRequired && editable && (val == null)) {
+                            return '$label is required';
                           }
-                        }
-
-                        // Special handling for Collection Audit Status field
-                        if (apiName == 'Status__c' &&
-                            recordType == 'Collection_Audit') {
-                          FormModel.updateCollectionAuditStatus(
-                              val, context, formKey);
-                        }
-
-                        // Special handling for PDAV loan relationship field
-                        if (apiName == 'Is_the_loan_taken_for_self_Yes_No__c' &&
-                            recordType == 'PDAV') {
-                          // Debug print to confirm we're entering this condition
-                          print('PDAV loan relationship changed to: $val');
-                          FormModel.updateCollectionAuditLoanRelationship(
-                              val, context, formKey);
-                        }
-
-                        // Special handling for BPM_Appraisal fields
-                        if (recordType == 'BPM_Appraisal' &&
-                            (apiName ==
-                                    'Did_BPM_visited_all_residence_of_borrowe__c' ||
-                                apiName ==
-                                    'Did_BPM_verified_all_documents_of_borrow__c' ||
-                                apiName ==
-                                    'Did_BPM_verified_Borrowers_Bank_Passbook__c')) {
-                          FormModel.updateBPMAppraisalRequirements(
-                              val, apiName, context, formKey);
-                        }
-
-                        // Use setState in a StatefulWidget instead
-                        if (context is StatefulElement) {
-                          context.markNeedsBuild();
-                        } else {
-                          // Force rebuild in a safer way
-                          Future.microtask(() {
-                            if (formKey.currentContext != null &&
-                                formKey.currentContext is Element) {
-                              (formKey.currentContext as Element)
-                                  .markNeedsBuild();
-                            }
-                          });
-                        }
-                      }
-                    },
-              validator: (val) {
-                if (isRequired && editable && (val == null)) {
-                  return '$label is required';
-                }
-                return null;
-              },
-            ),
+                          return null;
+                        };
+                      }),
           ],
         );
       case 'Phone':
@@ -1745,6 +1757,8 @@ class FormModel {
     FormModel? customerAddressField;
     FormModel? insuranceCertificateField;
     FormModel? assignedToField;
+    FormModel? rcReceivedField;
+    FormModel? localOGLField;
 
     // Check if this is a BPM_Appraisal form
     bool isBPMAppraisalForm = false;
@@ -1769,6 +1783,10 @@ class FormModel {
           insuranceCertificateField = field;
         } else if (field.apiName == 'Assigned_To__c') {
           assignedToField = field;
+        } else if (field.apiName == 'RC_received__c') {
+          rcReceivedField = field;
+        } else if (field.apiName == 'Local_or_OGL_Pick__c') {
+          localOGLField = field;
         }
       } else if (field.recordType == 'BPM_Appraisal') {
         isBPMAppraisalForm = true;
@@ -1832,13 +1850,13 @@ class FormModel {
           if (field.recordType != 'PDAV') continue;
 
           // Special handling for the two fields that should always be enabled
-          if (field.apiName == 'If_No_mention_the_reason_PDAV__c' ||
-              field.apiName == 'Insurance_Certificate_received__c') {
-            // Keep these fields always enabled but mark as required only when asset is seen
-            field.isRequired = (assetSeen == 'Yes');
-            field.editable = true; // Always enabled
-            continue; // Skip further processing for these fields
-          }
+          // if (field.apiName == 'If_No_mention_the_reason_PDAV__c' ||
+          //     field.apiName == 'Insurance_Certificate_received__c') {
+          //   // Keep these fields always enabled but mark as required only when asset is seen
+          //   field.isRequired = (assetSeen == 'Yes');
+          //   field.editable = true; // Always enabled
+          //   continue; // Skip further processing for these fields
+          // }
 
           // For fields that should be enabled if asset is seen
           if (enabledIfSeen.contains(field.apiName)) {
@@ -1862,41 +1880,74 @@ class FormModel {
         }
       }
 
-      // 3. Handle Insurance Certificate field
-      if (insuranceCertificateField != null) {
-        final insuranceReceived = insuranceCertificateField.value;
-
-        // Fields to enable if insurance certificate is NOT received
-        List<String> enabledIfNoInsurance = [
-          'If_No__c',
-          'If_asset_not_seen_at_the_time_of_village__c',
-          'If_asset_not_seen_at_the_time_of_visit__c',
-          'Asset_available_with_whom__c',
-          'If_third_party_take_details__c',
-          'Confirm_Asset_Make_Model__c',
-          'If_No_Match_mention_the_mismatched__c',
-          'RC_received_If_yes_please_share_RC_no_2__c',
-          'If_No_mention_the_reason__c'
-        ];
-
-        // Update field requirements based on insurance certificate status
+      // 3. Handle RC_received__c field
+      if (rcReceivedField != null) {
+        final rcReceived = rcReceivedField.value;
         for (var field in _allFormFields!) {
-          // Skip if not a PDAV field
-          if (field.recordType != 'PDAV') continue;
-
-          // Enable specified fields only if insurance certificate is not received
-          if (enabledIfNoInsurance.contains(field.apiName)) {
-            field.isRequired = (insuranceReceived == 'No');
-            field.editable = (insuranceReceived == 'No');
+          if (field.recordType == 'PDAV' &&
+              field.apiName == 'If_yes_please_share_RC_number__c') {
+            // Enable only if RC is received (Yes)
+            field.editable = (rcReceived == 'Yes');
+            field.isRequired = (rcReceived == 'Yes');
 
             if (!field.editable) {
               field.value = ''; // Clear value when disabled
             }
-
-            print('Updated ${field.apiName}: Editable = ${field.editable}');
+            print(
+                'Updated RC_received_If_yes_please_share_RC_no__c: Editable = ${field.editable}');
           }
         }
       }
+
+      // Handle OGL field
+      if (localOGLField != null) {
+        final isOGL = localOGLField.value;
+        for (var field in _allFormFields!) {
+          if (field.recordType == 'PDAV' &&
+              field.apiName == 'If_OGL_mention_Kms__c') {
+            // Enable only if OGL is selected
+            field.editable = (isOGL == 'OGL');
+            field.isRequired = (isOGL == 'OGL');
+
+            if (!field.editable) {
+              field.value = ''; // Clear value when disabled
+            }
+            print('Updated OGL_Number__c: Editable = ${field.editable}');
+          }
+        }
+      }
+
+      //   // Fields to enable if insurance certificate is NOT received
+      //   List<String> enabledIfNoInsurance = [
+      //     'If_No__c',
+      //     'If_asset_not_seen_at_the_time_of_village__c',
+      //     'If_asset_not_seen_at_the_time_of_visit__c',
+      //     'Asset_available_with_whom__c',
+      //     'If_third_party_take_details__c',
+      //     'Confirm_Asset_Make_Model__c',
+      //     'If_No_Match_mention_the_mismatched__c',
+      //     'RC_received_If_yes_please_share_RC_no_2__c',
+      //     'If_No_mention_the_reason__c'
+      //   ];
+
+      //   // Update field requirements based on insurance certificate status
+      //   for (var field in _allFormFields!) {
+      //     // Skip if not a PDAV field
+      //     if (field.recordType != 'PDAV') continue;
+
+      //     // Enable specified fields only if insurance certificate is not received
+      //     if (enabledIfNoInsurance.contains(field.apiName)) {
+      //       field.isRequired = (insuranceReceived == 'No');
+      //       field.editable = (insuranceReceived == 'No');
+
+      //       if (!field.editable) {
+      //         field.value = ''; // Clear value when disabled
+      //       }
+
+      //       print('Updated ${field.apiName}: Editable = ${field.editable}');
+      //     }
+      //   }
+      // }
 
       // Add handling for Asset Make Model match field
       FormModel? assetMakeModelField;
@@ -2017,6 +2068,7 @@ class FormModel {
       if (field.apiName == 'Is_the_customer_s_address_traceable__c') {
         customerAddressField = field;
         field.value = newValue;
+        field.isRequired = true; // Always required
         break;
       }
     }
@@ -2059,7 +2111,7 @@ class FormModel {
 
     // Refresh UI aggressively
     if (context.mounted) {
-      // Force immediate rebuild
+      // Force a rebuild of the UI
       WidgetsBinding.instance.addPostFrameCallback((_) {
         try {
           if (context is Element) {
@@ -2067,6 +2119,7 @@ class FormModel {
             context.markNeedsBuild();
 
             // Also mark ancestors for rebuild to ensure the entire form updates
+
             context.visitAncestorElements((ancestor) {
               ancestor.markNeedsBuild();
               return true;
@@ -2262,6 +2315,7 @@ class FormModel {
       if (field.apiName == 'Is_the_Asset_seen_at_the_time_of_visit__c') {
         assetSeenField = field;
         field.value = newValue;
+        field.isRequired = true; // Always required
         break;
       }
     }
@@ -2291,19 +2345,17 @@ class FormModel {
 
     // Update field requirements based on new asset visibility value
     for (var field in _allFormFields!) {
-      // Skip if not a PDAV field
-      if (field.recordType != 'PDAV') continue;
-
       // Special handling for the two fields that should always be enabled
-      if (field.apiName == 'If_No_mention_the_reason_PDAV__c' ||
-          field.apiName == 'Insurance_Certificate_received__c') {
-        // Keep these fields always enabled but mark as required only when asset is seen
-        field.isRequired = (newValue == 'Yes');
-        field.editable = true; // Always enabled
-        continue; // Skip further processing for these fields
-      }
+      // if (field.apiName == 'If_No_mention_the_reason_PDAV__c' ||
+      //     field.apiName == 'Insurance_Certificate_received__c') {
+      //   // Keep these fields always enabled but mark as required only when asset is seen
+      //   field.isRequired = (newValue == 'Yes');
+      //   field.editable = true; // Always enabled
+      //   continue; // Skip further processing for these fields
+      // }
 
-      // For fields that should be enabled if asset is seen
+      // For fields that should be enabled
+      field.isRequired = true; // Always requiredif asset is seen
       if (enabledIfSeen.contains(field.apiName)) {
         field.isRequired = (newValue == 'Yes');
         field.editable = (newValue == 'Yes');
@@ -2855,7 +2907,7 @@ class FormModel {
     }
   }
 
-  // Method to handle assignment changes for PDAV record type
+  // Method for handling assignment changes for PDAV record type
   static void updateAssignmentStatus(
       String? newValue, BuildContext context, GlobalKey<FormState> formKey) {
     if (_allFormFields == null) {
@@ -2993,6 +3045,98 @@ class FormModel {
           }
         } catch (e) {
           print('Error updating UI after not disbursed reason change: $e');
+        }
+      });
+    }
+  }
+
+  // Method for handling RC_received__c field changes
+  static void updateRCReceivedStatus(
+      String? newValue, BuildContext context, GlobalKey<FormState> formKey) {
+    if (_allFormFields == null) return;
+
+    print('Updating RC received status: $newValue');
+
+    // Update RC number field based on RC received status
+    for (var field in _allFormFields!) {
+      if (field.recordType != 'PDAV') continue;
+
+      // Handle RC number field
+      if (field.apiName == 'If_yes_please_share_RC_number__c') {
+        field.editable = (newValue == 'Yes');
+        field.isRequired = (newValue == 'Yes');
+
+        if (!field.editable) {
+          field.value = ''; // Clear value when disabled
+        }
+        print(
+            'Updated If_yes_please_share_RC_number__c: Editable = ${field.editable}');
+      }
+
+      // Handle reason field
+      if (field.apiName == 'If_No_mention_the_reason__c') {
+        field.editable = (newValue == 'No');
+        field.isRequired = (newValue == 'No');
+
+        if (!field.editable) {
+          field.value = ''; // Clear value when disabled
+        }
+        print(
+            'Updated If_No_mention_the_reason_PDAV__c: Editable = ${field.editable}');
+      }
+    }
+
+    // Refresh UI to show updated fields
+    _refreshUI(context, formKey);
+  }
+
+// Method for handling Local_or_OGL_Pick__c field changes
+  static void updateOGLStatus(
+      String? newValue, BuildContext context, GlobalKey<FormState> formKey) {
+    if (_allFormFields == null) return;
+
+    print('Updating OGL status: $newValue');
+
+    // Update OGL km field based on OGL selection
+    for (var field in _allFormFields!) {
+      if (field.recordType != 'PDAV') continue;
+
+      if (field.apiName == 'If_OGL_mention_Kms__c') {
+        field.editable = (newValue == 'OGL');
+        field.isRequired = (newValue == 'OGL');
+
+        if (!field.editable) {
+          field.value = ''; // Clear value when disabled
+        }
+        print('Updated If_OGL_mention_Kms__c: Editable = ${field.editable}');
+      }
+    }
+
+    // Refresh UI to show updated fields
+    _refreshUI(context, formKey);
+  }
+
+// Helper method to refresh UI after field updates
+  static void _refreshUI(BuildContext context, GlobalKey<FormState> formKey) {
+    if (context.mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        try {
+          if (context is Element) {
+            context.markNeedsBuild();
+            context.visitAncestorElements((ancestor) {
+              ancestor.markNeedsBuild();
+              return true;
+            });
+          }
+          WidgetsBinding.instance.scheduleFrame();
+
+          if (formKey.currentState != null && formKey.currentContext != null) {
+            Future.microtask(() {
+              (formKey.currentContext as Element).markNeedsBuild();
+            });
+          }
+        } catch (e) {
+          print('Error refreshing UI: $e');
         }
       });
     }

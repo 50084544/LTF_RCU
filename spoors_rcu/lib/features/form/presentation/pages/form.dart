@@ -165,17 +165,76 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
       return result;
     }
 
-    bool isAssignedToRCUVendor = false;
-    bool isAssignedToRCUARM = false;
+    // Check if the record type is PDAV and handle special validation for Assigned_To__c field
+    // This validates two specific cases:
+    // 1. "Assigned to RCU Vendor" - Enables vendor-specific fields
+    // 2. "Assigned to RCU ARM" - Enables ARM-specific fields
+    // bool isAssignedToRCUVendor = false;
+    // bool isAssignedToRCUARM = false;
+
+    // if (recordData['RecordTypeName'] == 'PDAV') {
+    //   // Check for Assigned_To__c field value
+    //   if (recordData.containsKey('Assigned_To__c')) {
+    //     String assignedToValue = recordData['Assigned_To__c']?.toString() ?? '';
+    //     isAssignedToRCUVendor = assignedToValue == 'Assigned to RCU Vendor';
+    //     isAssignedToRCUARM = assignedToValue == 'Assigned to RCU ARM';
+    //   }
+    // }
 
     if (recordData['RecordTypeName'] == 'PDAV') {
-      // Check for Assigned_To__c field value
-      if (recordData.containsKey('Assigned_To__c')) {
-        String assignedToValue = recordData['Assigned_To__c']?.toString() ?? '';
-        isAssignedToRCUVendor = assignedToValue == 'Assigned to RCU Vendor';
-        isAssignedToRCUARM = assignedToValue == 'Assigned to RCU ARM';
+      // Define a list of fields that should be non-mandatory
+      final nonMandatoryFields = [
+        'Does_asset_make_model_match_with_system__c',
+        'Does_Asset_Registration_number_match__c',
+        'Do_the_details_in_INVOICE_matches__c',
+        'Insurance_Certificate_received__c',
+        'Confirm_Asset_Make_Model__c',
+        'If_No_Match_mention_the_mismatched__c',
+        'RC_received__c',
+        'If_yes_please_share_RC_number__c',
+        'If_No_mention_the_reason__c'
+      ];
+
+      final mandatoryFields = [
+        'Is_customer_contactable_on_phone__c',
+        'Loan_Taken_Yes_No__c',
+        'Is_the_customer_s_address_traceable__c',
+        'At_time_of_visit_met_with__c',
+        'Is_the_Asset_seen_at_the_time_of_visit__c',
+        'Is_the_loan_taken_for_self_Yes_No__c',
+        'Local_or_OGL_Pick__c'
+      ];
+
+      // Loop through fields and make non-mandatory if in the list
+      for (var field in result) {
+        if (nonMandatoryFields.contains(field.apiName) && field.editable) {
+          // Keep the field editable but make it non-mandatory
+          field.isRequired = false;
+        } else if (field.editable) {
+          // All other fields remain mandatory
+          field.isRequired = true;
+        }
+        // } else if (mandatoryFields.contains(field.apiName) && field.editable) {
+        //   // Ensure the field is mandatory
+        //   field.isRequired = true;
+        //   print('Ensured ${field.apiName} is mandatory');
+        // }
       }
     }
+
+    // if (recordData['RecordTypeName'] == 'Branch_Compliance_Audit') {
+    //   // Check for RPM_PS_ID__c field value
+    //   if (recordData.containsKey('RPM_PS_ID__c') ||
+    //       recordData.containsKey('TM_PS_No__c')) {
+    //     String rpmPsIdValue = recordData['RPM_PS_ID__c']?.toString() ?? '';
+    //     String tmPsNoValue = recordData['TM_PS_No__c']?.toString() ?? '';
+    //     if (rpmPsIdValue == widget.username) {
+    //       FormModel.updatePDAV_RPM_TMVisibility('RPM');
+    //     } else if (tmPsNoValue == widget.username) {
+    //       FormModel.updatePDAV_RPM_TMVisibility('TM');
+    //     }
+    //   }
+    // }
 
     // Update schema fields with values from record data
     for (var field in result) {
@@ -776,7 +835,7 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
       try {
         final FormApiService apiService = FormApiService();
 
-        // print('Submitting form with fields: ${widget.username}');
+        print('Submitting form with fields: ${widget.username}');
         final result = await apiService.submitForm(
           recordType: widget.recordType ?? '',
           formFields: formFields,

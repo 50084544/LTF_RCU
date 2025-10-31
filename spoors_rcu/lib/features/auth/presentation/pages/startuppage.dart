@@ -81,7 +81,7 @@ class _StartuppageState extends State<Startuppage> {
             final decompressedBytes = Inflate(compressedData).getBytes();
             final xmlString = utf8.decode(decompressedBytes);
             final document = XmlDocument.parse(xmlString);
-
+            print(document.toXmlString(pretty: true, indent: '  '));
             final emailAttr = document.findAllElements('Attribute').firstWhere(
                   (attr) =>
                       attr.getAttribute('Name') ==
