@@ -1,4 +1,4 @@
-import 'package:BMS/core/security/security_service.dart';
+import 'package:sachet/core/security/security_service.dart';
 import 'package:flutter/material.dart';
 
 /// A utility class to allow easy security checks from anywhere in the app

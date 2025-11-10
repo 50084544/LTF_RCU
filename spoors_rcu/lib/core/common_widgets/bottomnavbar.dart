@@ -1,4 +1,4 @@
-import 'package:BMS/core/constants/constants.dart';
+import 'package:sachet/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavBar extends StatelessWidget {

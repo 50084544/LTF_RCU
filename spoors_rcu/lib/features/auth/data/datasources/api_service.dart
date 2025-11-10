@@ -57,7 +57,7 @@ class ApiService {
 
       // Make the actual API call
       final response = await _dio.post(
-        'https://bmsdev.ltfinance.com/CSM/api/do_LDAP_Authentication',
+        'https://sachetdev.ltfinance.com/CSM/api/do_LDAP_Authentication',
         data: jsonEncode(payload),
       );
 

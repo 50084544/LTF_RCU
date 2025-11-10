@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:BMS/core/security/ssl_pinning_manager.dart';
+import 'package:sachet/core/security/ssl_pinning_manager.dart';
 
 /// Custom interceptor to validate certificates and detect tampering attempts at the network layer
 class SecurityInterceptor extends Interceptor {

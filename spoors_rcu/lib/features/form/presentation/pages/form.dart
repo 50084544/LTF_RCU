@@ -1,12 +1,12 @@
-import 'package:BMS/core/constants/constants.dart';
-import 'package:BMS/core/network/api_service.dart';
-import 'package:BMS/features/form/data/datasources/form_service.dart';
+import 'package:sachet/core/constants/constants.dart';
+import 'package:sachet/core/network/api_service.dart';
+import 'package:sachet/features/form/data/datasources/form_service.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/form_model.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
-import 'package:BMS/core/network/LocalJsonStorage.dart';
+import 'package:sachet/core/network/LocalJsonStorage.dart';
 import '../widgets/fileupload.dart';
 
 class DynamicFormScreen extends StatefulWidget {
@@ -74,8 +74,10 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
       _lastDisbursalStatus = currentDisbursalStatus;
 
       // Update all form fields
-      if (currentDisbursalStatus != null) {
-        FormModel.updateDisbursalStatus(currentDisbursalStatus);
+      if (currentDisbursalStatus != null &&
+          widget.recordType == 'Live_Disbursement') {
+        FormModel.updateLiveDisbursalStatus(
+            currentDisbursalStatus, context, _formKey);
       }
 
       // Force a rebuild of the form to reflect editability changes
@@ -114,10 +116,11 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
 
       // Check for Disbursal Status field and update initial state
       for (var field in fields) {
-        if (field.apiName == 'Disbursal_Status__c') {
+        if (field.apiName == 'Disbursal_Status__c' &&
+            widget.recordType == 'Live_Disbursement') {
           _lastDisbursalStatus = field.value;
           if (field.value != null) {
-            FormModel.updateDisbursalStatus(field.value);
+            FormModel.updateLiveDisbursalStatus(field.value, context, _formKey);
           }
           break;
         }
@@ -165,42 +168,474 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
       return result;
     }
 
-    bool isAssignedToRCUVendor = false;
-    bool isAssignedToRCUARM = false;
-
     if (recordData['RecordTypeName'] == 'PDAV') {
-      // Check for Assigned_To__c field value
-      if (recordData.containsKey('Assigned_To__c')) {
-        String assignedToValue = recordData['Assigned_To__c']?.toString() ?? '';
-        isAssignedToRCUVendor = assignedToValue == 'Assigned to RCU Vendor';
-        isAssignedToRCUARM = assignedToValue == 'Assigned to RCU ARM';
+      // Define a list of fields that should be non-mandatory
+      final nonMandatoryFields = [
+        'Does_asset_make_model_match_with_system__c',
+        'Does_Asset_Registration_number_match__c',
+        'Do_the_details_in_INVOICE_matches__c',
+        'Insurance_Certificate_received__c',
+        'Confirm_Asset_Make_Model__c',
+        'If_No_Match_mention_the_mismatched__c',
+        'RC_received__c',
+        'If_yes_please_share_RC_number__c',
+        'If_No_mention_the_reason__c'
+      ];
+
+      final mandatoryFields = [
+        'Is_customer_contactable_on_phone__c',
+        'Loan_Taken_Yes_No__c',
+        'Is_the_customer_s_address_traceable__c',
+        'At_time_of_visit_met_with__c',
+        'Is_the_Asset_seen_at_the_time_of_visit__c',
+        'Is_the_loan_taken_for_self_Yes_No__c',
+        'Local_or_OGL_Pick__c'
+      ];
+
+      // Loop through fields and make non-mandatory if in the list
+      for (var field in result) {
+        if (nonMandatoryFields.contains(field.apiName) && field.editable) {
+          // Keep the field editable but make it non-mandatory
+          field.isRequired = false;
+        } else if (field.editable) {
+          // All other fields remain mandatory
+          field.isRequired = true;
+        }
+        // } else if (mandatoryFields.contains(field.apiName) && field.editable) {
+        //   // Ensure the field is mandatory
+        //   field.isRequired = true;
+        //   print('Ensured ${field.apiName} is mandatory');
+        // }
       }
     }
 
-    // Update schema fields with values from record data
-    for (var field in result) {
-      if (field.apiName.isNotEmpty &&
-          recordData.containsKey(field.apiName) &&
-          field.pageType == 'List') {
-        field.value = recordData[field.apiName]?.toString();
-      }
-    }
-
-    // Add any extra fields from recordData that are not in the schema as read-only
-    // for (var key in recordData.keys) {
-    //   final alreadyExists = result.any((field) => field.apiName == key);
-    //   if (!alreadyExists) {
-    //     result.add(FormModel(
-    //       type: 'ReadOnly',
-    //       label: key,
-    //       editable: false,
-    //       apiName: key,
-    //       pageType: 'Form',
-    //       value: recordData[key]?.toString(),
-    //       isRequired: false,
-    //     ));
+    // for (var field in result) {
+    //   if (field.apiName.isNotEmpty &&
+    //       recordData.containsKey(field.apiName) &&
+    //       field.pageType == 'List') {
+    //     field.value = recordData[field.apiName]?.toString();
     //   }
     // }
+
+    // Set record type on all fields first
+    bool isGoldLoanRecordType = recordData['RecordTypeName'] == 'Gold_Loan';
+    // print('Is Gold Loan Record Type: $isGoldLoanRecordType');
+
+    if (isGoldLoanRecordType) {
+      // print('Gold Loan Record Data Keys: ${recordData.keys.toList()}');
+      // print('Work_Id__c value: ${recordData['Work_Id__c']}');
+
+      // First pass: Set record type for all fields
+      for (var field in result) {
+        field.recordType = 'Gold_Loan';
+      }
+
+      // Second pass: Set values for all fields
+      for (var field in result) {
+        if (field.apiName.isNotEmpty && recordData.containsKey(field.apiName)) {
+          // print(
+          //     'Setting value for field: ${field.apiName} = ${recordData[field.apiName]}');
+          field.value = recordData[field.apiName]?.toString();
+        }
+      }
+
+      // Check Status_by_RM__c field and update TM/ZM visibility
+      if (recordData.containsKey('Status_by_RM__c')) {
+        String? statusByRM = recordData['Status_by_RM__c']?.toString();
+        // print('Status_by_RM__c value: $statusByRM');
+
+        if (statusByRM == 'Assigned to TM') {
+          //print('Enabling TM fields for Gold Loan');
+          //FormModel.updateGOLD_LOAN_RPM_TMVisibility('TM');
+
+          final ZM_Fields = [
+            'GeneralZMRemark1__c',
+            'GeneralZMRemark2__c',
+            'GeneralZMRemark3__c',
+            'GeneralZMRemark4__c',
+            'GeneralZMRemark5__c',
+            'RBIGuidelinesZMRemark1__c',
+            'RBIGuidelinesZMRemark2__c',
+            'RBIGuidelinesZMRemark3__c',
+            'RBIGuidelinesZMRemark4__c',
+            'OperatinalGuidelinesZMRemark1__c',
+            'OperatinalGuidelinesZMRemark2__c',
+            'OperatinalGuidelinesZMRemark3__c',
+            'OperatinalGuidelinesZMRemark4__c',
+            'OperatinalGuidelinesZMRemark5__c',
+            'OperatinalGuidelinesZMRemark6__c',
+            'OperatinalGuidelinesZMRemark7__c',
+            'OperatinalGuidelinesZMRemark8__c',
+            'OperatinalGuidelinesZMRemark9__c',
+            'OperatinalGuidelinesZMRemark10__c',
+            'OperatinalGuidelinesZMRemark11__c',
+            'OperatinalGuidelinesZMRemark12__c',
+            'OperatinalGuidelinesZMRemark13__c',
+            'ComplianceTrainingZMRemark2__c',
+            'ComplianceTrainingZMRemark3__c',
+            'ComplianceTrainingZMRemark4__c',
+            'Other_ZM_Observations_Please_mention_a__c',
+            'ATR_ZM_Remark_Please_mention_open_AT__c',
+            'OperatinalGuidelinesZMRemark14__c',
+            'OperatinalGuidelinesZMRemark15__c',
+            'OperatinalGuidelinesZMRemark16__c',
+            'OperatinalGuidelinesZMRemark17__c',
+            'OperatinalGuidelinesZMRemark18__c',
+            'OperatinalGuidelinesZMRemark19__c',
+            'OperatinalGuidelinesZMRemark20__c',
+            'GoldCheckingZMRemark1__c',
+            'GoldCheckingZMRemark2__c',
+            'GoldCheckingZMRemark3__c',
+            'GoldCheckingZMRemark4__c',
+            'GoldCheckingZMRemark5__c',
+            'SecurityAndRiskManagementZM1__c',
+            'SecurityAndRiskManagementZM2__c',
+            'SecurityAndRiskManagementZM3__c',
+            'SecurityAndRiskManagementZM4__c',
+            'SecurityAndRiskManagementZM5__c',
+            'SecurityAndRiskManagementZM6__c',
+            'SecurityAndRiskManagementZM7__c',
+            'SecurityAndRiskManagementZM8__c',
+            'SecurityAndRiskManagementZM9__c',
+            'SecurityAndRiskManagementZM10__c',
+            'SecurityAndRiskManagementZM11__c',
+            'ComplianceTrainingZMRemark1__c',
+          ];
+
+          for (var field in result) {
+            if (ZM_Fields.contains(field.apiName)) {
+              field.editable = false;
+              field.value = null;
+              //
+              // print('Forced ZM field to non-editable: ${field.apiName}');
+            }
+          }
+        } else if (statusByRM == 'Assigned to ZM') {
+          //print('Enabling ZM fields for Gold Loan');
+          //FormModel.updateGOLD_LOAN_RPM_TMVisibility('ZM');
+
+          final TM_Fields = [
+            'GeneralTMRemark1__c',
+            'GeneralTMRemark2__c',
+            'GeneralTMRemark3__c',
+            'GeneralTMRemark4__c',
+            'GeneralTMRemark5__c',
+            'RBIGuidelinesTMRemark1__c',
+            'RBIGuidelinesTMRemark2__c',
+            'RBIGuidelinesTMRemark3__c',
+            'RBIGuidelinesTMRemark4__c',
+            'OperatinalGuidelinesTMRemark1__c',
+            'OperatinalGuidelinesTMRemark2__c',
+            'OperatinalGuidelinesTMRemark3__c',
+            'OperatinalGuidelinesTMRemark4__c',
+            'OperatinalGuidelinesTMRemark5__c',
+            'OperatinalGuidelinesTMRemark6__c',
+            'OperatinalGuidelinesTMRemark7__c',
+            'OperatinalGuidelinesTMRemark8__c',
+            'OperatinalGuidelinesTMRemark9__c',
+            'OperatinalGuidelinesTMRemark10__c',
+            'OperatinalGuidelinesTMRemark11__c',
+            'OperatinalGuidelinesTMRemark12__c',
+            'OperatinalGuidelinesTMRemark13__c',
+            'OperatinalGuidelinesTMRemark14__c',
+            'ComplianceTrainingTMRemark3__c',
+            'ComplianceTrainingTMRemark4__c',
+            'Other_TM_Observations_Please_mention_a__c',
+            'ATR_TM_Remark_Please_mention_open_AT__c',
+            'OperatinalGuidelinesTMRemark15__c',
+            'OperatinalGuidelinesTMRemark16__c',
+            'OperatinalGuidelinesTMRemark17__c',
+            'OperatinalGuidelinesTMRemark18__c',
+            'OperatinalGuidelinesTMRemark19__c',
+            'OperatinalGuidelinesTMRemark20__c',
+            'GoldCheckingTMRemark1__c',
+            'GoldCheckingTMRemark2__c',
+            'GoldCheckingTMRemark3__c',
+            'GoldCheckingTMRemark4__c',
+            'GoldCheckingTMRemark5__c',
+            'SecurityAndRiskManagementTM1__c',
+            'SecurityAndRiskManagementTM2__c',
+            'SecurityAndRiskManagementTM3__c',
+            'SecurityAndRiskManagementTM4__c',
+            'SecurityAndRiskManagementTM5__c',
+            'SecurityAndRiskManagementTM6__c',
+            'SecurityAndRiskManagementTM7__c',
+            'SecurityAndRiskManagementTM8__c',
+            'SecurityAndRiskManagementTM9__c',
+            'SecurityAndRiskManagementTM10__c',
+            'SecurityAndRiskManagementTM11__c',
+            'ComplianceTrainingTMRemark1__c',
+            'ComplianceTrainingTMRemark2__c',
+          ];
+
+          for (var field in result) {
+            if (TM_Fields.contains(field.apiName)) {
+              field.editable = false;
+              field.value = null;
+              // print('Forced TM field to non-editable: ${field.apiName}');
+            }
+          }
+        }
+      }
+
+      // Third pass: Handle child fields visibility
+      // First find and process all picklist fields with value "Yes"
+      Map<String, bool> childVisibilityMap = {};
+
+      // Phase 1: Identify all picklists with value "Yes" and mark them and their children for hiding
+      for (var field in result) {
+        if (field.type == 'Picklist' && field.value == 'Yes') {
+          //print('Found picklist field with YES value: ${field.apiName}');
+
+          // Mark the parent picklist itself for hiding when value is 'Yes'
+          childVisibilityMap[field.apiName] = false;
+          // print('Marked parent picklist ${field.apiName} to be hidden');
+
+          final Map<String, dynamic> fieldData = field.toJson();
+          if (fieldData.containsKey('child')) {
+            // print(
+            //     'DEBUG: Child data type for ${field.apiName}: ${fieldData['child'].runtimeType}');
+
+            // Convert to list regardless of the original format
+            List<dynamic> childFields = [];
+
+            if (fieldData['child'] is List) {
+              childFields = fieldData['child'];
+              //  print('Child is already a List');
+            } else if (fieldData['child'] is Map) {
+              // If it's a Map, try to extract values as a list
+              childFields = fieldData['child'].values.toList();
+              // print(
+              //     'Child was Map, converted to List with ${childFields.length} items');
+            } else if (fieldData['child'] is String) {
+              // If it's a String, try to parse as JSON
+              try {
+                var decodedChildren = jsonDecode(fieldData['child']);
+                if (decodedChildren is List) {
+                  childFields = decodedChildren;
+                } else if (decodedChildren is Map) {
+                  childFields = decodedChildren.values.toList();
+                }
+                // print(
+                //     'Child was String, parsed to List with ${childFields.length} items');
+              } catch (e) {
+                print('ERROR parsing child as JSON: $e');
+              }
+            }
+
+            // print(
+            //     'Child fields to hide for ${field.apiName}: ${childFields.length} items');
+
+            // Mark all child fields to be hidden
+            for (var child in childFields) {
+              if (child is FormModel) {
+                String childApiName = child.apiName;
+                childVisibilityMap[childApiName] = false;
+                // print('Marked child ${childApiName} to be hidden');
+              } else if (child is Map && child.containsKey('apiName')) {
+                String childApiName = child['apiName'];
+                childVisibilityMap[childApiName] = false;
+                //  print('Marked child ${childApiName} (from map) to be hidden');
+              } else if (child is String) {
+                String childApiName = child;
+                childVisibilityMap[childApiName] = false;
+                // print(
+                //     'Marked child ${childApiName} (from string) to be hidden');
+              }
+            }
+          }
+        }
+      }
+
+      // Phase 2: Apply visibility settings to all fields based on the map
+      for (var field in result) {
+        // Set values from record data if available
+        if (field.apiName.isNotEmpty && recordData.containsKey(field.apiName)) {
+          field.value = recordData[field.apiName]?.toString();
+          // print('Set field value: ${field.apiName} = ${field.value}');
+        }
+
+        // Apply visibility rules based on the childVisibilityMap
+        if (childVisibilityMap.containsKey(field.apiName)) {
+          field.isVisible = childVisibilityMap[field.apiName]!;
+          // print(
+          //     'VISIBILITY UPDATE: Field ${field.apiName} isVisible set to ${field.isVisible}');
+
+          // Double-check if this is a picklist with value "Yes"
+          if (field.type == 'Picklist' && field.value == 'Yes') {
+            // print(
+            //     'Confirmed hiding picklist field with YES value: ${field.apiName}');
+          }
+        }
+
+        // For picklist fields, make sure we handle any children they might have
+        if (field.type == 'Picklist') {
+          // If this is a picklist with "Yes" value, ensure its children are hidden
+          if (field.value == 'Yes') {
+            //  print('Processing picklist with YES value: ${field.apiName}');
+
+            // Get any child fields this picklist might have
+            final Map<String, dynamic> fieldData = field.toJson();
+
+            if (fieldData.containsKey('child')) {
+              //  print('Found child fields in picklist: ${field.apiName}');
+
+              // Convert to list regardless of the original format
+              List<dynamic> childFields = [];
+
+              if (fieldData['child'] is List) {
+                childFields = fieldData['child'];
+              } else if (fieldData['child'] is Map) {
+                // If it's a Map, try to extract values as a list
+                childFields = fieldData['child'].values.toList();
+              } else if (fieldData['child'] is String) {
+                // If it's a String, try to parse as JSON
+                try {
+                  var decodedChildren = jsonDecode(fieldData['child']);
+                  if (decodedChildren is List) {
+                    childFields = decodedChildren;
+                  } else if (decodedChildren is Map) {
+                    childFields = decodedChildren.values.toList();
+                  }
+                } catch (e) {
+                  print('ERROR parsing child as JSON: $e');
+                }
+              }
+
+              bool showChildren =
+                  false; // When field.value is 'Yes', we hide children
+
+              // Process each child field
+              for (var child in childFields) {
+                if (child is FormModel) {
+                  String childApiName = child.apiName;
+                  // Find the actual field in our result list
+                  for (var targetField in result) {
+                    if (targetField.apiName == childApiName) {
+                      targetField.isVisible = showChildren;
+                      // print(
+                      //     'DIRECT update: Setting child ${childApiName} isVisible=${showChildren}');
+                      break;
+                    }
+                  }
+                } else if (child is Map && child.containsKey('apiName')) {
+                  String childApiName = child['apiName'];
+                  // Find the actual field in our result list
+                  for (var targetField in result) {
+                    if (targetField.apiName == childApiName) {
+                      targetField.isVisible = showChildren;
+                      // print(
+                      //     'DIRECT update: Setting child ${childApiName} isVisible=${showChildren}');
+                      break;
+                    }
+                  }
+                } else if (child is String) {
+                  String childApiName = child;
+                  // Find the actual field in our result list
+                  for (var targetField in result) {
+                    if (targetField.apiName == childApiName) {
+                      targetField.isVisible = showChildren;
+                      // print(
+                      //     'DIRECT update: Setting child ${childApiName} isVisible=${showChildren}');
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          } else if (field.value != 'Yes') {
+            // If value is not 'Yes', make sure all child fields are visible
+            final Map<String, dynamic> fieldData = field.toJson();
+
+            if (fieldData.containsKey('child')) {
+              List<dynamic> childFields = [];
+
+              if (fieldData['child'] is List) {
+                childFields = fieldData['child'];
+              } else if (fieldData['child'] is Map) {
+                childFields = fieldData['child'].values.toList();
+              } else if (fieldData['child'] is String) {
+                try {
+                  var decodedChildren = jsonDecode(fieldData['child']);
+                  if (decodedChildren is List) {
+                    childFields = decodedChildren;
+                  } else if (decodedChildren is Map) {
+                    childFields = decodedChildren.values.toList();
+                  }
+                } catch (e) {}
+              }
+
+              bool showChildren =
+                  true; // When field.value is not 'Yes', show children
+
+              for (var child in childFields) {
+                String? childApiName;
+
+                if (child is FormModel) {
+                  childApiName = child.apiName;
+                } else if (child is Map && child.containsKey('apiName')) {
+                  childApiName = child['apiName'];
+                } else if (child is String) {
+                  childApiName = child;
+                }
+
+                if (childApiName != null) {
+                  // Find the actual field in our result list
+                  for (var targetField in result) {
+                    if (targetField.apiName == childApiName) {
+                      targetField.isVisible = showChildren;
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } else if (recordData['RecordTypeName'] == 'Branch_Compliance_Audit') {
+      for (var field in result) {
+        field.recordType = recordData['RecordTypeName'];
+
+        if (field.apiName.isNotEmpty && recordData.containsKey(field.apiName)) {
+          field.value = recordData[field.apiName]?.toString();
+        }
+      }
+
+      String rpmPsIdValue = recordData['RPM_PS_ID__c']?.toString() ?? '';
+      String tmPsNoValue = recordData['TM_PS_No__c']?.toString() ?? '';
+      String statusByRM = recordData['Status_by_RM__c']?.toString() ?? '';
+
+      if (rpmPsIdValue == widget.username) {
+        for (var field in result) {
+          field.editable = (field.apiName == 'RPM_Remark__c');
+          // print('Field ${field.apiName} editable set to ${field.editable}');
+        }
+      } else if (tmPsNoValue == widget.username) {
+        for (var field in result) {
+          field.editable = (field.apiName == 'TM_Remark__c');
+          // print('Field ${field.apiName} editable set to ${field.editable}');
+        }
+      } else if (statusByRM == 'Assigned to RCU Executive') {
+        var fields = {'RPM_Remark__c', 'TM_Remark__c'};
+        for (var fs in fields) {
+          for (var field in result) {
+            if (field.apiName == fs) {
+              field.editable = false;
+            }
+          }
+        }
+      }
+    } else {
+      // Handle other record types normally
+      for (var field in result) {
+        field.recordType = recordData['RecordTypeName'];
+
+        if (field.apiName.isNotEmpty && recordData.containsKey(field.apiName)) {
+          field.value = recordData[field.apiName]?.toString();
+        }
+      }
+    }
 
     return result;
   }

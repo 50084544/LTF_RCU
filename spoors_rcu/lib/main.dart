@@ -1,8 +1,8 @@
-//import 'package:BMS/features/activities/presentation/pages/expansion.dart';
+//import 'package:sachet/features/activities/presentation/pages/expansion.dart';
 import 'dart:async';
-import 'package:BMS/core/network/api_service.dart';
-import 'package:BMS/features/auth/presentation/bloc/session/session_event.dart';
-import 'package:BMS/features/auth/presentation/pages/splash_screen.dart';
+import 'package:sachet/core/network/api_service.dart';
+import 'package:sachet/features/auth/presentation/bloc/session/session_event.dart';
+import 'package:sachet/features/auth/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -13,10 +13,10 @@ import 'features/auth/data/datasources/api_service.dart';
 import 'core/constants/constants.dart';
 import 'features/auth/presentation/pages/startuppage.dart';
 import 'package:app_links/app_links.dart';
-import 'package:BMS/core/common_widgets/sslpinning.dart';
+import 'package:sachet/core/common_widgets/sslpinning.dart';
 import 'dart:io';
-import 'package:BMS/core/security/security_service.dart';
-import 'package:BMS/features/auth/presentation/pages/logoutpage.dart';
+import 'package:sachet/core/security/security_service.dart';
+import 'package:sachet/features/auth/presentation/pages/logoutpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

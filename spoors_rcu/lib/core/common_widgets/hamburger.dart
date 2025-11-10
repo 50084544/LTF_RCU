@@ -1,7 +1,7 @@
-//import 'package:BMS/core/common_widgets/toast.dart';
-import 'package:BMS/core/constants/constants.dart';
-import 'package:BMS/features/auth/presentation/pages/startuppage.dart';
-//import 'package:BMS/features/auth/data/datasources/api_service.dart';
+//import 'package:sachet/core/common_widgets/toast.dart';
+import 'package:sachet/core/constants/constants.dart';
+import 'package:sachet/features/auth/presentation/pages/startuppage.dart';
+//import 'package:sachet/features/auth/data/datasources/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -252,6 +252,33 @@ class _CustomDrawerState extends State<CustomDrawer> {
               _handleLogout();
               //Navigator.of(context).pushReplacementNamed('/logout');
             },
+          ),
+          // Version information at the bottom
+          Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Text(
+                  'SACHET',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.fontcolor,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Version 1.0.0 (Build 6)',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

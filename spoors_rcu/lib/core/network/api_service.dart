@@ -1,4 +1,4 @@
-import 'package:BMS/core/network/LocalJsonStorage.dart';
+import 'package:sachet/core/network/LocalJsonStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -6,9 +6,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:hive/hive.dart';
 import '../../core/config/environment_config.dart';
-import 'package:BMS/core/common_widgets/sslpinning.dart';
+import 'package:sachet/core/common_widgets/sslpinning.dart';
 import 'package:flutter/foundation.dart';
-import 'package:BMS/core/security/security_service.dart';
+import 'package:sachet/core/security/security_service.dart';
 
 class ApiCall {
   static final ApiCall _instance = ApiCall._internal();
@@ -354,10 +354,10 @@ class ApiCall {
         });
       }
 
-      const JsonEncoder encoder = JsonEncoder.withIndent('  ');
-      String prettyJson = encoder.convert(data);
-      print('Image upload payload:');
-      prettyJson.split('\n').forEach((line) => print(line));
+      // const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+      // String prettyJson = encoder.convert(data);
+      // print('Image upload payload:');
+      // prettyJson.split('\n').forEach((line) => print(line));
 
       final response = await _dio.post(
         'https://ltfs.my.salesforce.com/services/apexrest/rcu/record',
@@ -621,17 +621,17 @@ class ApiCall {
       };
 
       // Debug the payload
-      const JsonEncoder encoder = JsonEncoder.withIndent('  ');
-      String prettyJson = encoder.convert(payload);
-      print('Image upload payload:');
-      prettyJson.split('\n').forEach((line) => print(line));
+      // const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+      // String prettyJson = encoder.convert(payload);
+      // print('Image upload payload:');
+      // prettyJson.split('\n').forEach((line) => print(line));
 
       // Convert payload to JSON properly with json.encode
       String jsonPayload = json.encode(payload);
 
       // Verify the encoded JSON string has proper quotes around base64 data
-      print(
-          'First few chars of encoded JSON: ${jsonPayload.substring(0, 50)}...');
+      // print(
+      //     'First few chars of encoded JSON: ${jsonPayload.substring(0, 50)}...');
 
       final response = await _dio.post(
         'https://ltfs.my.salesforce.com/services/apexrest/rcu/fileUpload',
