@@ -1,4 +1,4 @@
-import 'package:BMS/core/network/api_service.dart';
+import 'package:sachet/core/network/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -15,8 +15,12 @@ class FormModel {
   final String pageType;
   String? _value;
   String? recordType;
-  bool isRequired;
+  late bool isRequired;
   List<String>? picklistValues;
+  List<String>? childValues;
+  dynamic _childFields;
+  bool isVisible = true;
+  String? header;
 
   // Add new property to track if field is related to a reference field
   String? relatedReferenceField;
@@ -168,6 +172,17 @@ class FormModel {
       [BuildContext? context, GlobalKey<FormState>? formKey]) {
     _allFormFields = fields;
 
+    // Initialize original field states to preserve schema integrity
+    _originalFieldStates = {};
+    for (var field in fields) {
+      _originalFieldStates![field.apiName] = {
+        'editable': field.editable,
+        'isRequired': field.isRequired,
+        'pageType': field.pageType,
+        'recordType': field.recordType,
+      };
+    }
+
     // Check if Live_Disbursement form with Disbursal Status field exists
     _checkForDisbursalStatusField();
 
@@ -251,8 +266,8 @@ class FormModel {
       // Update the fields based on the selected value
       if (relativeDetailsField != null && thirdPartyDetailsField != null) {
         String relationshipValue = loanRelationshipField.value!;
-        print(
-            'Initializing PDAV fields with loan relationship value: $relationshipValue');
+        // print(
+        //     'Initializing PDAV fields with loan relationship value: $relationshipValue');
 
         if (relationshipValue == 'Relative') {
           // If "Relative" is selected, enable relative details field and disable third party details
@@ -278,6 +293,277 @@ class FormModel {
     }
   }
 
+  // static void updateLiveDisbursalStatus(
+  //     String? newStatus, BuildContext context, GlobalKey<FormState> formKey) {
+  //   if (disbursalStatus == newStatus) return;
+
+  //   disbursalStatus = newStatus;
+
+  //   if (_allFormFields == null) return;
+
+  //   bool foundDisbursalStatusField = false;
+  //   bool makeReadOnly = disbursalStatus == 'Not disbursed';
+  //   bool isDisbursed = disbursalStatus == 'Disbursed';
+
+  //   // Process fields after Disbursal Status field
+  //   for (var field in _allFormFields!) {
+  //     // Once we find the Disbursal Status field, mark it so we know to process subsequent fields
+  //     if (field.apiName == 'Disbursal_Status__c') {
+  //       foundDisbursalStatusField = true;
+  //       continue; // Skip this field itself
+  //     }
+
+  //     // Special handling for If_others_then__c and If_not_disbursed__c fields
+  //     if (field.apiName == 'If_others_then__c' ||
+  //         field.apiName == 'If_not_disbursed__c') {
+  //       // Disable these fields if 'Disbursed' is selected
+  //       if (isDisbursed) {
+  //         field.editable = false;
+  //         field.isRequired = false; // Also make them not required
+  //         field.value = ''; // Clear their values
+  //       } else if (makeReadOnly) {
+  //         // For "Not disbursed", keep these fields editable
+  //         field.editable = true;
+  //         field.isRequired = true; // Make them required
+  //       } else {
+  //         // For any other status (e.g. "Others"), keep these fields editable
+  //         field.editable = true;
+  //         field.isRequired = false;
+  //       }
+  //       continue; // Skip further processing for these special fields
+  //     }
+
+  //     // Special handling for Status__c field - always keep editable
+  //     if (field.apiName == 'Status__c') {
+  //       // Skip making Status__c read-only, keep it editable regardless of disbursal status
+  //       continue;
+  //     }
+
+  //     // Make all other fields after the Disbursal Status field read-only if "Not disbursed" is selected
+  //     if (foundDisbursalStatusField) {
+  //       field.editable =
+  //           makeReadOnly ? false : (field.isRequired || field.editable);
+  //     }
+  //   }
+
+  //   // Print debug information
+  //   print('Disbursal status updated to: $disbursalStatus');
+  //   print(
+  //       'Fields updated based on disbursal status (Status__c remains editable)');
+
+  //   // Refresh UI to show updated requirements
+  //   if (context.mounted) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       try {
+  //         if (context is Element) {
+  //           // Mark this element for rebuild
+  //           context.markNeedsBuild();
+
+  //           // Also mark ancestors for rebuild to ensure the entire form updates
+  //           context.visitAncestorElements((ancestor) {
+  //             ancestor.markNeedsBuild();
+  //             return true;
+  //           });
+  //         }
+
+  //         // Force a frame to be scheduled
+  //         WidgetsBinding.instance.scheduleFrame();
+
+  //         // For really stubborn UI updates, use this more aggressive approach
+  //         if (formKey.currentState != null) {
+  //           Future.microtask(() {
+  //             if (formKey.currentContext != null) {
+  //               (formKey.currentContext as Element).markNeedsBuild();
+  //             }
+  //           });
+  //         }
+  //       } catch (e) {
+  //         print('Error updating UI after Collection Audit status change: $e');
+  //       }
+  //     });
+  //   }
+  // }
+
+  // Store original field states for all fields to preserve schema integrity
+  static Map<String, Map<String, dynamic>>? _originalFieldStates;
+
+  // Helper method to check if a field can be modified based on original schema
+  static bool _canModifyField(FormModel field) {
+    Map<String, dynamic>? originalState = _originalFieldStates?[field.apiName];
+    bool wasOriginallyEditable = originalState?['editable'] ?? false;
+    String fieldPageType = originalState?['pageType'] ?? '';
+
+    // Only modify fields that were originally editable and have pageType "Form"
+    return wasOriginallyEditable && fieldPageType == 'Form';
+  }
+
+  static void updateLiveDisbursalStatus(
+      String? newStatus, BuildContext context, GlobalKey<FormState> formKey) {
+    if (disbursalStatus == newStatus) return;
+
+    disbursalStatus = newStatus;
+
+    if (_allFormFields == null) return;
+
+    // Store original field states on first call - capture all fields regardless of current editable state
+    if (_originalFieldStates == null) {
+      _originalFieldStates = {};
+      for (var field in _allFormFields!) {
+        _originalFieldStates![field.apiName] = {
+          'editable': field.editable,
+          'isRequired': field.isRequired,
+          'pageType': field.pageType,
+          'recordType': field.recordType,
+        };
+      }
+    }
+
+    bool isDisbursed = disbursalStatus == 'Disbursed';
+    bool isNotDisbursed = disbursalStatus == 'Not disbursed';
+
+    // Find the index of If_others_then__c field to determine which fields come after it
+    int ifOthersThenIndex = -1;
+    for (int i = 0; i < _allFormFields!.length; i++) {
+      if (_allFormFields![i].recordType == 'Live_Disbursement' &&
+          _allFormFields![i].apiName == 'If_others_then__c') {
+        ifOthersThenIndex = i;
+        break;
+      }
+    }
+
+    // Process all fields in the Live_Disbursement form
+    for (int i = 0; i < _allFormFields!.length; i++) {
+      var field = _allFormFields![i];
+
+      // Skip if not a Live_Disbursement field
+      if (field.recordType != 'Live_Disbursement') continue;
+
+      // Skip fields that cannot be modified based on original schema
+      if (!_canModifyField(field)) {
+        continue;
+      }
+
+      // Skip the Disbursal_Status__c field itself - always keep editable if originally editable
+      if (field.apiName == 'Disbursal_Status__c') {
+        continue;
+      }
+
+      // Special handling for If_not_disbursed__c field
+      if (field.apiName == 'If_not_disbursed__c') {
+        if (isDisbursed) {
+          // Disable if Disbursed is selected
+          field.editable = false;
+          field.isRequired = false;
+          field.value = '';
+          if (field._controller != null) {
+            field._controller!.text = '';
+          }
+        } else if (isNotDisbursed) {
+          // Enable if Not disbursed is selected
+          field.editable = true;
+          field.isRequired = true;
+        } else {
+          // For any other status, keep it editable
+          field.editable = true;
+          field.isRequired = false;
+        }
+        // print(
+        //     'Updated If_not_disbursed__c: Editable = ${field.editable}, Required = ${field.isRequired}');
+        continue;
+      }
+
+      // Special handling for If_others_then__c field
+      if (field.apiName == 'If_others_then__c') {
+        if (isDisbursed) {
+          // Disable if Disbursed is selected
+          field.editable = false;
+          field.isRequired = false;
+          field.value = '';
+          if (field._controller != null) {
+            field._controller!.text = '';
+          }
+        } else {
+          // Keep disabled by default - will be enabled by updateNotDisbursedReason if 'others' is selected
+          field.editable = false;
+          field.isRequired = false;
+        }
+        // print(
+        //     'Updated If_others_then__c: Editable = ${field.editable}, Required = ${field.isRequired}');
+        continue;
+      }
+
+      // For all fields that come AFTER If_others_then__c
+      if (ifOthersThenIndex != -1 && i > ifOthersThenIndex) {
+        if (isNotDisbursed) {
+          // If "Not disbursed" is selected, disable only fields after If_others_then__c
+          field.editable = false;
+          field.isRequired = false;
+          // Clear values of disabled fields
+          if (field.value != null) {
+            field.value = '';
+            if (field._controller != null) {
+              field._controller!.text = '';
+            }
+          }
+          // print('Disabled field after If_others_then__c: ${field.apiName}');
+        } else if (isDisbursed) {
+          // If "Disbursed" is selected, restore original editable and required state for fields after If_others_then__c
+          Map<String, dynamic>? originalState =
+              _originalFieldStates?[field.apiName];
+          bool originalEditable = originalState?['editable'] ?? false;
+          bool originalRequired = originalState?['isRequired'] ?? false;
+          field.editable = originalEditable;
+          field.isRequired = originalRequired;
+          // print(
+          //     'Restored field ${field.apiName} to editable = ${field.editable}, required = ${field.isRequired}');
+        }
+      }
+    }
+
+    // Trigger form validation
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        if (formKey.currentState != null) {
+          // Validate the form
+          formKey.currentState!.validate();
+
+          // Mark form fields for rebuild
+          if (context is Element && context.mounted) {
+            context.markNeedsBuild();
+
+            // Also mark parent form for rebuild
+            context.visitAncestorElements((element) {
+              element.markNeedsBuild();
+              return true;
+            });
+          }
+
+          // Ensure controllers are synced with values
+          for (var field in _allFormFields!) {
+            if (field._controller != null && field.value != null) {
+              if (field._controller!.text != field.value) {
+                field._controller!.text = field.value!;
+              }
+            }
+          }
+        }
+
+        // Force a UI update
+        if (context.mounted) {
+          (context as Element).markNeedsBuild();
+          WidgetsBinding.instance.scheduleFrame();
+        }
+      } catch (e) {
+        print('Error updating form validation: $e');
+      }
+    });
+
+    // Print debug information
+    // print('Disbursal status updated to: $disbursalStatus');
+    // print(
+    //     'Fields updated based on disbursal status (Status__c remains editable)');
+  }
+
   // Method to handle Disbursal Status field changes
   static void updateDisbursalStatus(String? newStatus) {
     if (disbursalStatus == newStatus) return; // No change
@@ -292,6 +578,11 @@ class FormModel {
 
     // Process fields after Disbursal Status field
     for (var field in _allFormFields!) {
+      // Skip fields that cannot be modified based on original schema
+      if (!_canModifyField(field)) {
+        continue;
+      }
+
       // Once we find the Disbursal Status field, mark it so we know to process subsequent fields
       if (field.apiName == 'Disbursal_Status__c') {
         foundDisbursalStatusField = true;
@@ -318,7 +609,7 @@ class FormModel {
         continue; // Skip further processing for these special fields
       }
 
-      // Special handling for Status__c field - always keep editable
+      // Special handling for Status__c field - always keep editable if originally editable
       if (field.apiName == 'Status__c') {
         // Skip making Status__c read-only, keep it editable regardless of disbursal status
         continue;
@@ -326,15 +617,19 @@ class FormModel {
 
       // Make all other fields after the Disbursal Status field read-only if "Not disbursed" is selected
       if (foundDisbursalStatusField) {
-        field.editable =
-            makeReadOnly ? false : (field.isRequired || field.editable);
+        Map<String, dynamic>? originalState =
+            _originalFieldStates?[field.apiName];
+        bool wasOriginallyEditable = originalState?['editable'] ?? false;
+        bool wasOriginallyRequired = originalState?['isRequired'] ?? false;
+        field.editable = makeReadOnly ? false : wasOriginallyEditable;
+        field.isRequired = makeReadOnly ? false : wasOriginallyRequired;
       }
     }
 
     // Print debug information
-    print('Disbursal status updated to: $disbursalStatus');
-    print(
-        'Fields updated based on disbursal status (Status__c remains editable)');
+    // print('Disbursal status updated to: $disbursalStatus');
+    // print(
+    //     'Fields updated based on disbursal status (Status__c remains editable)');
   }
 
   // Check if this is a Live_Disbursement form and initialize Disbursal Status if found
@@ -384,8 +679,8 @@ class FormModel {
       if (loanPassbookField.value == 'Yes') {
         noReasonField.editable = false;
         noReasonField.value = ''; // Clear the value
-        print(
-            'Initialized If_No_mention_the_reason__c: Editable = false based on Loan_Passbook_issued_Response__c = Yes');
+        // print(
+        //     'Initialized If_No_mention_the_reason__c: Editable = false based on Loan_Passbook_issued_Response__c = Yes');
       }
     }
 
@@ -395,8 +690,8 @@ class FormModel {
       if (loanPerpetualField.value == 'No') {
         yesApplicantField.editable = false;
         yesApplicantField.value = ''; // Clear the value
-        print(
-            'Initialized If_Yes_applicant_should_know_other__c: Editable = false based on Whether_the_loan_applied_is_Perpetual__c = No');
+        // print(
+        //     'Initialized If_Yes_applicant_should_know_other__c: Editable = false based on Whether_the_loan_applied_is_Perpetual__c = No');
       }
     }
 
@@ -413,8 +708,8 @@ class FormModel {
         othersReasonField.value = '';
       }
 
-      print(
-          'Initialized If_others_then__c: Editable = ${othersReasonField.editable}, Required = ${othersReasonField.isRequired} based on If_not_disbursed__c = ${notDisbursedField.value}');
+      // print(
+      //     'Initialized If_others_then__c: Editable = ${othersReasonField.editable}, Required = ${othersReasonField.isRequired} based on If_not_disbursed__c = ${notDisbursedField.value}');
     }
   }
 
@@ -668,8 +963,8 @@ class FormModel {
               }
 
               // Log which fields were made non-editable
-              print(
-                  'Fields made non-editable after fetch code API: ${updatedFieldLabels.join(', ')}');
+              // print(
+              //     'Fields made non-editable after fetch code API: ${updatedFieldLabels.join(', ')}');
 
               // Set success flag to show appropriate message
               success = true;
@@ -1312,6 +1607,14 @@ class FormModel {
                           value: opt, child: Text(opt, style: getTextStyle())))
                       .toList(),
                 ],
+                validator: (val) {
+                  // Special validation for Gold_Loan - always require a value if editable
+                  if ((recordType == 'Gold_Loan' && editable && val == null) ||
+                      (isRequired && editable && val == null)) {
+                    return '$label is required';
+                  }
+                  return null;
+                },
                 onChanged: isReadOnly
                     ? null
                     : (val) {
@@ -1322,14 +1625,14 @@ class FormModel {
                           // Update value
                           value = val;
 
-                          // Special handling for Disbursal Status field
-                          if (apiName == 'Disbursal_Status__c') {
-                            FormModel.updateDisbursalStatus(val);
-                          }
-
                           // Special handling for Live_Disbursement fields
                           if (recordType == 'Live_Disbursement') {
-                            if (apiName == 'Loan_Passbook_issued_Response__c') {
+                            if (apiName == 'Disbursal_Status__c') {
+                              // Call the correct method with context and formKey
+                              FormModel.updateLiveDisbursalStatus(
+                                  val, context, formKey);
+                            } else if (apiName ==
+                                'Loan_Passbook_issued_Response__c') {
                               // Find and update If_No_mention_the_reason__c field
                               for (var field in _allFormFields!) {
                                 if (field.apiName ==
@@ -1343,8 +1646,8 @@ class FormModel {
                                   if (!shouldBeEditable) {
                                     field.value = '';
                                   }
-                                  print(
-                                      'Updated If_No_mention_the_reason__c: Editable = $shouldBeEditable');
+                                  // print(
+                                  //     'Updated If_No_mention_the_reason__c: Editable = $shouldBeEditable');
                                   break;
                                 }
                               }
@@ -1363,13 +1666,33 @@ class FormModel {
                                   if (!shouldBeEditable) {
                                     field.value = '';
                                   }
-                                  print(
-                                      'Updated If_Yes_applicant_should_know_other__c: Editable = $shouldBeEditable');
+                                  // print(
+                                  //     'Updated If_Yes_applicant_should_know_other__c: Editable = $shouldBeEditable');
                                   break;
                                 }
                               }
                             } else if (apiName == 'If_not_disbursed__c') {
                               FormModel.updateNotDisbursedReason(
+                                  val, context, formKey);
+                            }
+                          }
+
+                          // Special handling for BPM_Appraisal fields
+                          if (recordType == 'BPM_Appraisal') {
+                            if (apiName == 'Did_BPM_visited_all_residence_of_borrowe__c' ||
+                                apiName ==
+                                    'Did_BPM_verified_all_documents_of_borrow__c' ||
+                                apiName ==
+                                    'Did_BPM_verified_Borrowers_Bank_Passbook__c') {
+                              FormModel.updateBPMAppraisalRequirements(
+                                  val, apiName, context, formKey);
+                            }
+                          }
+
+                          // Special handling for Collection Audit Status field
+                          if (recordType == 'Collection_Audit') {
+                            if (apiName == 'Status__c') {
+                              FormModel.updateCollectionAuditStatus(
                                   val, context, formKey);
                             }
                           }
@@ -1408,33 +1731,14 @@ class FormModel {
                               (context).markNeedsBuild();
                             }
 
-                            // Special handling for Collection Audit Status field
-                            if (apiName == 'Status__c' &&
-                                recordType == 'Collection_Audit') {
-                              FormModel.updateCollectionAuditStatus(
-                                  val, context, formKey);
-                            }
-
                             // Special handling for PDAV loan relationship field
                             if (apiName ==
                                     'Is_the_loan_taken_for_self_Yes_No__c' &&
                                 recordType == 'PDAV') {
                               // Debug print to confirm we're entering this condition
-                              print('PDAV loan relationship changed to: $val');
+                              // print('PDAV loan relationship changed to: $val');
                               FormModel.updateCollectionAuditLoanRelationship(
                                   val, context, formKey);
-                            }
-
-                            // Special handling for BPM_Appraisal fields
-                            if (recordType == 'BPM_Appraisal' &&
-                                (apiName ==
-                                        'Did_BPM_visited_all_residence_of_borrowe__c' ||
-                                    apiName ==
-                                        'Did_BPM_verified_all_documents_of_borrow__c' ||
-                                    apiName ==
-                                        'Did_BPM_verified_Borrowers_Bank_Passbook__c')) {
-                              FormModel.updateBPMAppraisalRequirements(
-                                  val, apiName, context, formKey);
                             }
 
                             // Use setState in a StatefulWidget instead
@@ -1452,13 +1756,6 @@ class FormModel {
                             }
                           }
                         }
-                        validator:
-                        (val) {
-                          if (isRequired && editable && (val == null)) {
-                            return '$label is required';
-                          }
-                          return null;
-                        };
                       }),
           ],
         );
@@ -1703,7 +2000,7 @@ class FormModel {
         //return Null;
         //return SizedBox();
         return Container(
-          margin: const EdgeInsets.only(bottom: 16),
+          margin: const EdgeInsets.only(bottom: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1728,18 +2025,18 @@ class FormModel {
                 ),
                 style: getTextStyle(), // Use the same text style
               ),
-              if (type != 'Text')
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    'Field type: $type',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade600,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
+              // if (type != 'Text')
+              //   Padding(
+              //     padding: const EdgeInsets.only(top: 4),
+              //     child: Text(
+              //       'Field type: $type',
+              //       style: TextStyle(
+              //         fontSize: 12,
+              //         color: Colors.grey.shade600,
+              //         fontStyle: FontStyle.italic,
+              //       ),
+              //     ),
+              //   ),
             ],
           ),
         );
@@ -1813,8 +2110,8 @@ class FormModel {
             if (!field.editable) {
               field.value = ''; // Clear value when disabled
             }
-            print(
-                'Updated If_No_Need_to_co_ordinate_escalated_to__c: Editable = ${field.editable}');
+            // print(
+            //     'Updated If_No_Need_to_co_ordinate_escalated_to__c: Editable = ${field.editable}');
           }
         }
       }
@@ -1893,8 +2190,8 @@ class FormModel {
             if (!field.editable) {
               field.value = ''; // Clear value when disabled
             }
-            print(
-                'Updated RC_received_If_yes_please_share_RC_no__c: Editable = ${field.editable}');
+            // print(
+            //     'Updated RC_received_If_yes_please_share_RC_no__c: Editable = ${field.editable}');
           }
         }
       }
@@ -1912,7 +2209,7 @@ class FormModel {
             if (!field.editable) {
               field.value = ''; // Clear value when disabled
             }
-            print('Updated OGL_Number__c: Editable = ${field.editable}');
+            // print('Updated OGL_Number__c: Editable = ${field.editable}');
           }
         }
       }
@@ -1982,8 +2279,8 @@ class FormModel {
           ifNoMatchField.value = '';
         }
 
-        print(
-            'Initialized If_No_Match_mention_the_mismatched__c: Editable = ${ifNoMatchField.editable}');
+        // print(
+        //     'Initialized If_No_Match_mention_the_mismatched__c: Editable = ${ifNoMatchField.editable}');
       }
 
       // 4. Handle Assigned_To__c field to control ARM-specific fields
@@ -2020,16 +2317,16 @@ class FormModel {
               field.value = '';
             }
 
-            print(
-                'Updated ARM field ${field.apiName}: Editable = ${field.editable}');
+            // print(
+            //     'Updated ARM field ${field.apiName}: Editable = ${field.editable}');
           }
 
           // For always disabled fields (DM/ZM fields)
           if (alwaysDisabledFields.contains(field.apiName)) {
             // Always keep these fields disabled
             field.editable = false;
-            print(
-                'Disabled DM/ZM field ${field.apiName}: Editable = ${field.editable}');
+            // print(
+            //     'Disabled DM/ZM field ${field.apiName}: Editable = ${field.editable}');
           }
         }
       }
@@ -2089,8 +2386,8 @@ class FormModel {
           field.value = '';
         }
 
-        print(
-            'Updated If_No_Need_to_co_ordinate_escalated_to__c: Editable = ${field.editable}');
+        // print(
+        //     'Updated If_No_Need_to_co_ordinate_escalated_to__c: Editable = ${field.editable}');
       }
 
       // Handle the "If Yes" field - should be enabled only when address IS traceable
@@ -2104,8 +2401,8 @@ class FormModel {
           field.value = '';
         }
 
-        print(
-            'Updated If_Yes_capture_image_of_the_house__c: Editable = ${field.editable}');
+        // print(
+        //     'Updated If_Yes_capture_image_of_the_house__c: Editable = ${field.editable}');
       }
     }
 
@@ -2193,7 +2490,7 @@ class FormModel {
           field.value = '';
         }
 
-        print('Updated ${field.apiName}: Editable = ${field.editable}');
+        // print('Updated ${field.apiName}: Editable = ${field.editable}');
       }
     }
 
@@ -2238,7 +2535,7 @@ class FormModel {
       return;
     }
 
-    print('Updating Asset Make Model match: $newValue');
+    // print('Updating Asset Make Model match: $newValue');
 
     // Find the "If No Match" field that needs to be toggled based on selection
     FormModel? ifNoMatchField;
@@ -2264,8 +2561,8 @@ class FormModel {
         ifNoMatchField.value = '';
       }
 
-      print(
-          'Updated If_No_Match_mention_the_mismatched__c: Editable = ${ifNoMatchField.editable}');
+      // print(
+      //     'Updated If_No_Match_mention_the_mismatched__c: Editable = ${ifNoMatchField.editable}');
     }
 
     // Refresh UI to show updated fields
@@ -2638,7 +2935,7 @@ class FormModel {
       return;
     }
 
-    print('Updating Collection Audit status: $newValue');
+    // print('Updating Collection Audit status: $newValue');
 
     // Fields to be non-required if status is "Visited"
     List<String> nonRequiredIfVisited = [
@@ -2654,8 +2951,9 @@ class FormModel {
       // For fields that should not be required if status is "Visited"
       if (nonRequiredIfVisited.contains(field.apiName)) {
         field.isRequired = (newValue != 'Visited');
-        print(
-            'Updated field ${field.apiName}: Required = ${field.isRequired}, Status = $newValue');
+        field.editable = (newValue != 'Visited');
+        // print(
+        //     'Updated field ${field.apiName}: Required = ${field.isRequired}, Status = $newValue');
       }
     }
 
@@ -2752,7 +3050,7 @@ class FormModel {
       return;
     }
 
-    print('Updating PDAV loan relationship: $newValue');
+    // print('Updating PDAV loan relationship: $newValue');
 
     FormModel? relativeDetailsField;
     FormModel? thirdPartyDetailsField;
@@ -2776,7 +3074,7 @@ class FormModel {
 
     // Update the fields based on the selected value
     if (relativeDetailsField != null && thirdPartyDetailsField != null) {
-      print('Current selection for loan relationship: $newValue');
+      // print('Current selection for loan relationship: $newValue');
 
       if (newValue == 'Relative') {
         // If "Relative" is selected, enable relative details field and disable third party details
@@ -2784,16 +3082,16 @@ class FormModel {
         thirdPartyDetailsField.editable = false;
         // Clear the third party field value since it's now disabled
         thirdPartyDetailsField.value = null;
-        print(
-            'Enabled Relative details field, disabled Third Party details field');
+        // print(
+        //     'Enabled Relative details field, disabled Third Party details field');
       } else if (newValue == 'Third Party') {
         // If "Third Party" is selected, enable third party details field and disable relative details
         relativeDetailsField.editable = false;
         thirdPartyDetailsField.editable = true;
         // Clear the relative field value since it's now disabled
         relativeDetailsField.value = null;
-        print(
-            'Enabled Third Party details field, disabled Relative details field');
+        // print(
+        //     'Enabled Third Party details field, disabled Relative details field');
       } else {
         // For any other selection (like "Self" or null), disable both fields
         relativeDetailsField.editable = false;
@@ -2801,7 +3099,7 @@ class FormModel {
         // Clear both field values
         relativeDetailsField.value = null;
         thirdPartyDetailsField.value = null;
-        print('Disabled both Relative and Third Party details fields');
+        // print('Disabled both Relative and Third Party details fields');
       }
     }
 
@@ -2873,8 +3171,8 @@ class FormModel {
       // Update the dependent field's required status based on the trigger field value
       if (dependentField != null) {
         bool shouldBeRequired = (newValue == 'No');
-        print(
-            'Updating BPM_Appraisal field ${dependentField.apiName}: Required = $shouldBeRequired');
+        // print(
+        //     'Updating BPM_Appraisal field ${dependentField.apiName}: Required = $shouldBeRequired');
         dependentField.isRequired = shouldBeRequired;
 
         // Refresh UI to reflect the change
@@ -2940,8 +3238,8 @@ class FormModel {
           field.value = '';
         }
 
-        print(
-            'Updated ARM field ${field.apiName} due to assignment change: Editable = ${field.editable}');
+        // print(
+        //     'Updated ARM field ${field.apiName} due to assignment change: Editable = ${field.editable}');
       }
     }
 
@@ -2966,7 +3264,7 @@ class FormModel {
           // Schedule a frame to ensure changes are visible
           WidgetsBinding.instance.scheduleFrame();
 
-          print('UI refresh triggered for assignment change to: $newValue');
+          // print('UI refresh triggered for assignment change to: $newValue');
         } catch (e) {
           print('Error refreshing UI after assignment change: $e');
         }
@@ -3010,8 +3308,8 @@ class FormModel {
           field.value = '';
         }
 
-        print(
-            'Updated If_others_then__c: Editable = ${field.editable}, Required = ${field.isRequired}');
+        // print(
+        //     'Updated If_others_then__c: Editable = ${field.editable}, Required = ${field.isRequired}');
         break;
       }
     }
@@ -3055,7 +3353,7 @@ class FormModel {
       String? newValue, BuildContext context, GlobalKey<FormState> formKey) {
     if (_allFormFields == null) return;
 
-    print('Updating RC received status: $newValue');
+    // print('Updating RC received status: $newValue');
 
     // Update RC number field based on RC received status
     for (var field in _allFormFields!) {
@@ -3069,8 +3367,8 @@ class FormModel {
         if (!field.editable) {
           field.value = ''; // Clear value when disabled
         }
-        print(
-            'Updated If_yes_please_share_RC_number__c: Editable = ${field.editable}');
+        // print(
+        //     'Updated If_yes_please_share_RC_number__c: Editable = ${field.editable}');
       }
 
       // Handle reason field
@@ -3081,8 +3379,8 @@ class FormModel {
         if (!field.editable) {
           field.value = ''; // Clear value when disabled
         }
-        print(
-            'Updated If_No_mention_the_reason_PDAV__c: Editable = ${field.editable}');
+        // print(
+        //     'Updated If_No_mention_the_reason_PDAV__c: Editable = ${field.editable}');
       }
     }
 
@@ -3095,7 +3393,7 @@ class FormModel {
       String? newValue, BuildContext context, GlobalKey<FormState> formKey) {
     if (_allFormFields == null) return;
 
-    print('Updating OGL status: $newValue');
+    // print('Updating OGL status: $newValue');
 
     // Update OGL km field based on OGL selection
     for (var field in _allFormFields!) {
@@ -3108,7 +3406,7 @@ class FormModel {
         if (!field.editable) {
           field.value = ''; // Clear value when disabled
         }
-        print('Updated If_OGL_mention_Kms__c: Editable = ${field.editable}');
+        // print('Updated If_OGL_mention_Kms__c: Editable = ${field.editable}');
       }
     }
 

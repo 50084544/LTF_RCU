@@ -3,7 +3,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:BMS/core/security/ssl_pinning_manager.dart';
+import 'package:sachet/core/security/ssl_pinning_manager.dart';
 
 /// Security service to protect against various mobile security threats
 class SecurityService {

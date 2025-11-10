@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:BMS/features/auth/data/datasources/api_service.dart';
+import 'package:sachet/features/auth/data/datasources/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'session_event.dart';

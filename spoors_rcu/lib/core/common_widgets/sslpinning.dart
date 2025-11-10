@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:dio/io.dart';
 import 'package:flutter/services.dart';
-import 'package:BMS/core/security/ssl_pinning_manager.dart';
-import 'package:BMS/core/security/secure_http_client_adapter.dart';
+import 'package:sachet/core/security/ssl_pinning_manager.dart';
+import 'package:sachet/core/security/secure_http_client_adapter.dart';
 
 abstract class CertificateReader {
   static ByteData? cert;

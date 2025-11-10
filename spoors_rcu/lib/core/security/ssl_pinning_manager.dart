@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:BMS/core/common_widgets/sslpinning.dart';
+import 'package:sachet/core/common_widgets/sslpinning.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:BMS/core/common_widgets/sslpinning.dart';
+import 'package:sachet/core/common_widgets/sslpinning.dart';
 
 /// Utility class for certificate validation and fingerprint generation
 class CertificateValidator {
