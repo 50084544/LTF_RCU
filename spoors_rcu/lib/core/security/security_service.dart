@@ -39,7 +39,7 @@ class SecurityService {
 
     // Run all checks in parallel for faster verification
     final results = await Future.wait([
-      _checkEmulator(),
+      //_checkEmulator(),
       _checkRooted(),
       _checkHooking(),
       _checkDebuggerAttached(),
@@ -101,11 +101,11 @@ class SecurityService {
           return false;
         }
       } else if (Platform.isIOS) {
-        final iosInfo = await _deviceInfo.iosInfo;
-        if (!iosInfo.isPhysicalDevice) {
-          _securityIssues.add('Device is an iOS simulator');
-          return false;
-        }
+        // final iosInfo = await _deviceInfo.iosInfo;
+        // if (!iosInfo.isPhysicalDevice) {
+        //   _securityIssues.add('Device is an iOS simulator');
+        //   return false;
+        // }
       }
 
       return true;
@@ -194,39 +194,40 @@ class SecurityService {
           _securityIssues.add('Device is rooted');
           return false;
         }
-      } else if (Platform.isIOS) {
-        // Check for jailbreak using direct file checks
-        final jailbreakPaths = [
-          '/Applications/Cydia.app',
-          '/Applications/FakeCarrier.app',
-          '/Applications/Sileo.app',
-          '/Applications/Zebra.app',
-          '/bin/bash',
-          '/usr/sbin/sshd',
-          '/usr/bin/ssh',
-          '/etc/apt',
-          '/private/var/lib/apt',
-          '/private/var/lib/cydia',
-          '/private/var/mobile/Library/SBSettings/Themes',
-        ];
-
-        for (final path in jailbreakPaths) {
-          try {
-            final file = File(path);
-            if (await file.exists()) {
-              isRooted = true;
-              break;
-            }
-          } catch (_) {
-            // Ignore file access errors
-          }
-        }
-
-        if (isRooted) {
-          _securityIssues.add('Device is jailbroken');
-          return false;
-        }
       }
+      // else if (Platform.isIOS) {
+      //   // Check for jailbreak using direct file checks
+      //   final jailbreakPaths = [
+      //     '/Applications/Cydia.app',
+      //     '/Applications/FakeCarrier.app',
+      //     '/Applications/Sileo.app',
+      //     '/Applications/Zebra.app',
+      //     '/bin/bash',
+      //     '/usr/sbin/sshd',
+      //     '/usr/bin/ssh',
+      //     '/etc/apt',
+      //     '/private/var/lib/apt',
+      //     '/private/var/lib/cydia',
+      //     '/private/var/mobile/Library/SBSettings/Themes',
+      //   ];
+
+      //   for (final path in jailbreakPaths) {
+      //     try {
+      //       final file = File(path);
+      //       if (await file.exists()) {
+      //         isRooted = true;
+      //         break;
+      //       }
+      //     } catch (_) {
+      //       // Ignore file access errors
+      //     }
+      //   }
+
+      //   if (isRooted) {
+      //     _securityIssues.add('Device is jailbroken');
+      //     return false;
+      //   }
+      // }
 
       return true;
     } catch (e) {
@@ -438,11 +439,11 @@ class SecurityService {
         // but this requires native code through method channels
 
         // For now, we'll use a basic check for simulator which can't be fully trusted
-        final iosInfo = await _deviceInfo.iosInfo;
-        if (!iosInfo.isPhysicalDevice) {
-          _securityIssues.add('iOS simulator detected');
-          return false;
-        }
+        // final iosInfo = await _deviceInfo.iosInfo;
+        // if (!iosInfo.isPhysicalDevice) {
+        //   _securityIssues.add('iOS simulator detected');
+        //   return false;
+        // }
       }
 
       return true;
